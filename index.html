@@ -590,6 +590,233 @@
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
+  /* ── BADGE PRE-LAUNCH ── */
+  .badge-pre {
+    color: var(--yellow);
+    border-color: rgba(240,180,41,0.3);
+    background: rgba(240,180,41,0.07);
+  }
+
+  /* ── GTM CARDS ── */
+  .gtm-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .gtm-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gtm-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .gtm-card-felix::before { background: var(--accent); }
+  .gtm-card-tradexyz::before { background: #9b6dff; }
+  .gtm-card-eqx::before { background: var(--green); }
+
+  .gtm-card-name { font-family: var(--mono); font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .gtm-card-name.felix { color: var(--accent); }
+  .gtm-card-name.tradexyz { color: #9b6dff; }
+  .gtm-card-name.eqx { color: var(--green); }
+
+  .gtm-card-handle { font-family: var(--mono); font-size: 10px; color: var(--text-3); margin-bottom: 1rem; letter-spacing: 0.04em; }
+
+  .gtm-section-title {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-3); margin: 0.75rem 0 0.25rem;
+  }
+
+  .gtm-section-body { font-size: 12px; color: var(--text-2); line-height: 1.6; }
+
+  .gtm-tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 0.75rem; }
+
+  .gtm-tag {
+    font-family: var(--mono); font-size: 9px; padding: 2px 7px;
+    border-radius: 3px; background: var(--bg-3); color: var(--text-2);
+    border: 1px solid var(--border); letter-spacing: 0.04em;
+  }
+
+  .gtm-tag.str { color: var(--green); border-color: rgba(0,229,160,0.25); background: rgba(0,229,160,0.06); }
+  .gtm-tag.wk  { color: var(--red);  border-color: rgba(255,69,96,0.25);  background: rgba(255,69,96,0.06); }
+
+  /* ── COMPARISON CALLOUT ── */
+  .comparison-callout {
+    background: var(--bg-2);
+    border: 1px solid var(--border-active);
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .callout-label {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent); white-space: nowrap; padding-top: 3px;
+  }
+
+  .callout-text {
+    font-family: var(--mono); font-size: 13px; color: var(--text); line-height: 1.7; font-style: italic;
+  }
+
+  /* ── HIP-4 NARRATIVE CARDS ── */
+  .hip4-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hip4-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .hip4-card:hover { background: var(--bg-2); border-color: rgba(0,200,255,0.2); }
+
+  .hip4-card-risk { border-color: rgba(240,180,41,0.2); background: rgba(240,180,41,0.03); }
+  .hip4-card-risk:hover { border-color: rgba(240,180,41,0.4); background: rgba(240,180,41,0.06); }
+
+  .hip4-card-thesis { border-color: rgba(0,229,160,0.2); background: rgba(0,229,160,0.03); }
+  .hip4-card-thesis:hover { border-color: rgba(0,229,160,0.4); background: rgba(0,229,160,0.06); }
+
+  .hip4-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .hip4-title {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .hip4-body {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.65;
+  }
+
+  /* ── ECOSYSTEM MAP ── */
+  .eco-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+
+  .eco-filter-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 4px 11px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+
+  .eco-filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .eco-filter-btn.active { color: #000; border-color: transparent; }
+
+  .eco-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+
+  .eco-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+    transition: border-color 0.15s, background 0.15s;
+    cursor: default;
+  }
+
+  .eco-card:hover { background: var(--bg-2); }
+
+  .eco-card.eco-eqx {
+    border-color: rgba(0,229,160,0.4);
+    background: rgba(0,229,160,0.04);
+    box-shadow: 0 0 20px rgba(0,229,160,0.06);
+  }
+
+  .eco-card.eco-eqx:hover { background: rgba(0,229,160,0.08); }
+
+  .eco-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+    gap: 6px;
+  }
+
+  .eco-card-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .eco-cat-badge {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 2px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: 1px solid;
+  }
+
+  .eco-card-desc {
+    font-size: 11px;
+    color: var(--text-3);
+    line-height: 1.55;
+  }
+
+  .eco-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .gtm-grid { grid-template-columns: 1fr; }
+    .comparison-callout { flex-direction: column; gap: 0.5rem; }
+    .hip4-grid { grid-template-columns: 1fr; }
+    .eco-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+  }
+
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -625,6 +852,7 @@
     <span class="header-title">EQX Labs <span>— Market Research Dashboard</span></span>
   </div>
   <nav class="nav-pills">
+    <a class="nav-pill" href="#protocol">Positioning</a>
     <a class="nav-pill" href="#global">Global</a>
     <a class="nav-pill" href="#priority">Priority</a>
     <a class="nav-pill" href="#currency">Currency</a>
@@ -641,13 +869,392 @@
 
 <main>
 
+
 <!-- ═══════════════════════════════════════════════
-     SECTION 1 — GLOBAL OPPORTUNITY
+     SECTION 1 — POSITIONING & COMPETITIVE CONTEXT
+════════════════════════════════════════════════ -->
+<section class="section fade-in" id="protocol">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">01 — Positioning &amp; Competitive Context</div>
+      <h2 class="section-title">Ecosystem Positioning: Felix, trade.xyz &amp; EQX Labs</h2>
+      <p class="section-subtitle">Three products attacking the same core pain point — completely different product types, trust models, and go-to-market plays</p>
+    </div>
+
+    <!-- 3-WAY TABLE -->
+    <div class="panel-title fade-in delay-1" style="margin-bottom:0.75rem">3-Way Product &amp; Positioning Comparison</div>
+    <div class="data-table-wrap fade-in delay-1">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="min-width:160px">Aspect</th>
+            <th>Felix <span class="badge badge-live" style="margin-left:6px">LIVE</span></th>
+            <th>trade.xyz <span class="badge badge-live" style="margin-left:6px">LIVE</span></th>
+            <th>EQX Labs <span class="badge badge-pre" style="margin-left:6px">PRE-LAUNCH</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="val">Product Type</td>
+            <td>Tokenised <strong>spot</strong> US stocks &amp; ETFs</td>
+            <td>Perpetual futures (stocks + indices)</td>
+            <td class="pos"><strong>Spot market</strong> for real US shares</td>
+          </tr>
+          <tr>
+            <td class="val">What you own</td>
+            <td>Tokenised asset (economic exposure + dividends)</td>
+            <td class="neg">Price contract (synthetic)</td>
+            <td class="pos">Real share via SPV token</td>
+          </tr>
+          <tr>
+            <td class="val">Underlying Asset</td>
+            <td>Real off-chain shares (Ondo Global Markets)</td>
+            <td class="neg">Nothing — fully synthetic</td>
+            <td class="pos">Real shares held in SPV at DTC-member US custodial bank (Fortune 500)</td>
+          </tr>
+          <tr>
+            <td class="val">Custody / Backing</td>
+            <td>Ondo Finance infrastructure ($550M+ TVL)</td>
+            <td class="neg">None</td>
+            <td class="pos">Regulated DTC-member bank + SPV + on-chain verifiable proof of reserves</td>
+          </tr>
+          <tr>
+            <td class="val">Leverage</td>
+            <td>None (spot)</td>
+            <td class="accent">Up to 20×</td>
+            <td>None (spot)</td>
+          </tr>
+          <tr>
+            <td class="val">Funding Rates</td>
+            <td>No</td>
+            <td class="neg">Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td class="val">Settlement</td>
+            <td>On-chain via HyperEVM + Ondo mint/redeem</td>
+            <td>On-chain perpetuals</td>
+            <td>Off-chain bank settlement + on-chain messaging to Hyperliquid orderbook</td>
+          </tr>
+          <tr>
+            <td class="val">Key Use Case</td>
+            <td>Long-term ownership, DCA, collateral/lending</td>
+            <td>Short-term trading, speculation, hedging</td>
+            <td class="pos">True ownership + wealth preservation for non-US investors</td>
+          </tr>
+          <tr>
+            <td class="val">Verifiability</td>
+            <td>Backed by Ondo (trusted RWA issuer)</td>
+            <td class="neg">No</td>
+            <td class="pos">On-chain proof + DTC-regulated custody</td>
+          </tr>
+          <tr>
+            <td class="val">Current Scale</td>
+            <td class="pos">260+ stocks/ETFs live (Mar 26, 2026)</td>
+            <td class="pos">Leading RWA perps venue (licensed S&amp;P 500, individual stocks, indices)</td>
+            <td style="color:var(--yellow)">Early Access sign-up only</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- GTM STRATEGY CARDS -->
+    <div class="panel-title fade-in delay-2" style="margin:2rem 0 1rem">GTM Strategy Breakdown</div>
+    <div class="gtm-grid fade-in delay-2">
+
+      <div class="gtm-card gtm-card-felix">
+        <div class="gtm-card-name felix">Felix</div>
+        <div class="gtm-card-handle">@felixprotocol</div>
+        <div class="gtm-section-title">Positioning</div>
+        <div class="gtm-section-body">The first-mover live spot equities layer. "No more off-ramping — trade real US stocks/ETFs directly on Hyperliquid with CEX-level execution."</div>
+        <div class="gtm-section-title">Target Audience</div>
+        <div class="gtm-section-body">Active on-chain traders + growing retail who want spot exposure without leaving the ecosystem. Heavy emphasis on large-size execution (&lt;10 bps net cost up to $1M+ orders).</div>
+        <div class="gtm-section-title">GTM Tactics</div>
+        <div class="gtm-section-body">Launched Mar 26, 2026 with Ondo partnership → massive visibility boost from Ondo + Hyperliquid ecosystem. Rapid expansion to 1,000+ assets planned. Strong HyperEVM integration. Auto-reinvested dividends, future limit orders, stocks as collateral, lending.</div>
+        <div class="gtm-tag-row">
+          <span class="gtm-tag str">Already live</span>
+          <span class="gtm-tag str">260+ assets</span>
+          <span class="gtm-tag str">Ondo partnership</span>
+          <span class="gtm-tag wk">Relies on Ondo custody model</span>
+          <span class="gtm-tag wk">No DTC-bank SPV narrative</span>
+        </div>
+      </div>
+
+      <div class="gtm-card gtm-card-tradexyz">
+        <div class="gtm-card-name tradexyz">trade.xyz</div>
+        <div class="gtm-card-handle">@tradexyz</div>
+        <div class="gtm-section-title">Positioning</div>
+        <div class="gtm-section-body">The permissionless 24/7 RWA perpetuals venue. Synthetic leveraged exposure to equities and indices without ever touching real shares.</div>
+        <div class="gtm-section-title">Target Audience</div>
+        <div class="gtm-section-body">Speculators, hedgers, and short-term traders who want leverage and don't care about actual ownership.</div>
+        <div class="gtm-section-title">GTM Tactics</div>
+        <div class="gtm-section-body">Leverages Hyperliquid's native HyperCore orderbook for perps. Heavy focus on institutional-grade tools + licensed benchmarks (official S&amp;P 500 perp) to build credibility. Not competing on "real ownership."</div>
+        <div class="gtm-tag-row">
+          <span class="gtm-tag str">Dominant in perps</span>
+          <span class="gtm-tag str">24/7 access</span>
+          <span class="gtm-tag str">Licensed indices</span>
+          <span class="gtm-tag wk">No real ownership</span>
+          <span class="gtm-tag wk">Funding rates erode hold</span>
+        </div>
+      </div>
+
+      <div class="gtm-card gtm-card-eqx">
+        <div class="gtm-card-name eqx">EQX Labs</div>
+        <div class="gtm-card-handle">@eqxlabs · eqxlabs.io</div>
+        <div class="gtm-section-title">Positioning</div>
+        <div class="gtm-section-body">The trust-maximized spot ownership layer. SPV + regulated DTC-member Fortune 500 bank custody + on-chain verifiable proof of reserves. Built natively on Hyperliquid.</div>
+        <div class="gtm-section-title">Target Audience</div>
+        <div class="gtm-section-body">Non-US retail and long-term investors who want real ownership without FX fees, high custody charges, slow settlement, or opaque brokers. "Available to everyone" outside US restrictions.</div>
+        <div class="gtm-section-title">GTM Tactics</div>
+        <div class="gtm-section-body">Early Access sign-up live now. Will lean hard into community education: "This is not another tokenised synthetic — these are real shares you own." Positioning directly against Felix on custody transparency (DTC bank + SPV + on-chain proof vs Ondo's model).</div>
+        <div class="gtm-tag-row">
+          <span class="gtm-tag str">Trust-maximised narrative</span>
+          <span class="gtm-tag str">DTC + on-chain proof</span>
+          <span class="gtm-tag str">Whitespace vs Felix</span>
+          <span class="gtm-tag wk">Not live yet</span>
+          <span class="gtm-tag wk">Felix has first-mover advantage</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EQX VS TRADE.XYZ 2-WAY TABLE -->
+    <div class="panel-title fade-in delay-3" style="margin-bottom:0.5rem">EQX Labs vs trade.xyz — How It's Different</div>
+    <div class="panel-subtitle fade-in delay-3" style="margin-bottom:1rem">This will come up constantly in community work. Get it sharp.</div>
+    <div class="data-table-wrap fade-in delay-3">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="min-width:180px"></th>
+            <th>trade.xyz (XYZ Perps)</th>
+            <th>EQX Labs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="val">Product type</td><td>Perpetual futures</td><td class="pos">Spot market</td></tr>
+          <tr><td class="val">What you own</td><td class="neg">A price contract</td><td class="pos">A real share</td></tr>
+          <tr><td class="val">Underlying asset</td><td class="neg">Nothing — synthetic</td><td class="pos">Real stock at a US bank</td></tr>
+          <tr><td class="val">Funding rates</td><td class="neg">Yes</td><td class="pos">No</td></tr>
+          <tr><td class="val">Leverage</td><td class="accent">Up to 20×</td><td>No leverage</td></tr>
+          <tr><td class="val">Custody</td><td class="neg">None</td><td class="pos">Regulated DTC-member bank</td></tr>
+          <tr><td class="val">Use case</td><td>Short-term trading / speculation</td><td class="pos">Ownership / wealth preservation</td></tr>
+          <tr><td class="val">Verifiable?</td><td class="neg">No</td><td class="pos">On-chain proof of reserves</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ONE-LINER CALLOUT -->
+    <div class="comparison-callout fade-in delay-4">
+      <div class="callout-label">Community One-Liner</div>
+      <div class="callout-text">"XYZ lets you trade the price of NVDA. EQX lets you <span style="color:var(--green);font-style:normal;font-weight:600">own</span> NVDA. Different product entirely."</div>
+    </div>
+
+    <!-- ECOSYSTEM-WIDE PATTERNS -->
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
+      <div class="panel-title fade-in" style="margin-bottom:1.25rem">Ecosystem-Wide Patterns</div>
+      <div class="chart-grid-2 fade-in delay-1" style="margin-bottom:1.5rem">
+
+        <div class="chart-panel" style="padding:1.25rem 1.5rem">
+          <div class="panel-title" style="margin-bottom:0.5rem">Tone Spectrum</div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:0.75rem">
+            <span style="font-family:var(--mono);font-size:11px;color:var(--text-3);white-space:nowrap">Professional</span>
+            <div style="flex:1;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--accent),rgba(0,200,255,0.2));position:relative">
+              <div style="position:absolute;left:20%;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg-1);box-shadow:0 0 8px var(--accent)"></div>
+            </div>
+            <span style="font-family:var(--mono);font-size:11px;color:var(--text-3);white-space:nowrap">Community/Meme</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.6">~80% professional/infrastructure-builder, ~20% community/meme. No heavy shilling — focus is product utility and ecosystem alignment.</div>
+        </div>
+
+        <div class="chart-panel" style="padding:1.25rem 1.5rem">
+          <div class="panel-title" style="margin-bottom:0.75rem">Active Narratives Right Now</div>
+          <div class="gtm-tag-row">
+            <span class="gtm-tag str">RWA tokenisation</span>
+            <span class="gtm-tag str">Native stablecoins</span>
+            <span class="gtm-tag str">Intelligent yield automation</span>
+            <span class="gtm-tag str">On-chain credit layers</span>
+          </div>
+          <div class="panel-title" style="margin:1rem 0 0.5rem">Shared Messaging Themes</div>
+          <div class="gtm-tag-row">
+            <span class="gtm-tag">24/7 access</span>
+            <span class="gtm-tag">Deep liquidity</span>
+            <span class="gtm-tag">Low costs</span>
+            <span class="gtm-tag">No off-ramping</span>
+            <span class="gtm-tag">Capital efficiency</span>
+            <span class="gtm-tag">Built for Hyperliquid</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="comparison-callout fade-in delay-2" style="margin-top:0">
+        <div class="callout-label">EQX Gap</div>
+        <div class="callout-text" style="font-style:normal">The "real equities on-chain" narrative is adjacent to several projects (Felix, trade.xyz) but <span style="color:var(--accent)">nobody owns it with real custody behind it</span>. That's the gap.</div>
+      </div>
+    </div>
+
+    <!-- PROJECT MAP -->
+    <div style="margin-top:2.5rem">
+      <div class="panel-title fade-in" style="margin-bottom:0.4rem">Hyperliquid Ecosystem Project Map</div>
+      <div class="panel-subtitle fade-in" style="margin-bottom:1rem">13 projects — tone references, product neighbours, and composability targets for EQX GTM work</div>
+      <div class="data-table-wrap fade-in delay-1">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Category</th>
+              <th>Tone</th>
+              <th>EQX Relevance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="val">Unit <span style="font-weight:300;color:var(--text-3)">@unitxyz</span></td>
+              <td>Infrastructure / bridging</td>
+              <td>Operational, factual, zero hype</td>
+              <td class="accent">Primary tone reference — "We built the plumbing."</td>
+            </tr>
+            <tr>
+              <td class="val">Native Markets <span style="font-weight:300;color:var(--text-3)">@nativemarkets</span></td>
+              <td>Stablecoin (USDH)</td>
+              <td>Aligned, utility-focused, institutional</td>
+              <td class="accent">Primary tone reference — leads with ecosystem alignment.</td>
+            </tr>
+            <tr>
+              <td class="val">Felix <span style="font-weight:300;color:var(--text-3)">@felixprotocol</span></td>
+              <td>CDP + tokenised stocks + perps</td>
+              <td>Informative, trader-centric, excited about drops</td>
+              <td style="color:var(--yellow)">Closest product neighbour — trades stocks on-chain via Ondo. Watch closely.</td>
+            </tr>
+            <tr>
+              <td class="val">trade.xyz <span style="font-weight:300;color:var(--text-3)">@tradexyz_</span></td>
+              <td>RWA perps (stocks, indices, commodities)</td>
+              <td>Straightforward, trader-first</td>
+              <td style="color:var(--yellow)">Direct product comparison target — perps vs EQX spot. Key to differentiate clearly.</td>
+            </tr>
+            <tr>
+              <td class="val">HyperLend <span style="font-weight:300;color:var(--text-3)">@hyperlendx</span></td>
+              <td>Lending / credit infrastructure</td>
+              <td>Clean, professional, TVL-focused</td>
+              <td class="pos">Potential composability partner — credit layer EQX could integrate with.</td>
+            </tr>
+            <tr>
+              <td class="val">Hyperdrive <span style="font-weight:300;color:var(--text-3)">@hyperdrivedefi</span></td>
+              <td>Stablecoin money market + yield</td>
+              <td>Professional, visionary, RWA-focused</td>
+              <td class="pos">"Making everything on HyperCore liquid" — narrative overlap with EQX.</td>
+            </tr>
+            <tr>
+              <td class="val">Valantis Labs <span style="font-weight:300;color:var(--text-3)">@ValantisLabs</span></td>
+              <td>Modular DEX / yield / LST</td>
+              <td>Smart, product-demo style</td>
+              <td>Good example of benefit-heavy, non-hype communication.</td>
+            </tr>
+            <tr>
+              <td class="val">Stratum <span style="font-weight:300;color:var(--text-3)">@StratumX</span></td>
+              <td>Structured finance + trading terminal</td>
+              <td>Professional builder tone</td>
+              <td>Useful tone reference for institutional-adjacent messaging.</td>
+            </tr>
+            <tr>
+              <td class="val">Hyperion <span style="font-weight:300;color:var(--text-3)">@HyperionDeFi</span></td>
+              <td>Public-listed DeFi / HYPE treasury</td>
+              <td>Corporate, transparent, reports financials</td>
+              <td>Interesting model — public company discipline applied to DeFi.</td>
+            </tr>
+            <tr>
+              <td class="val">Liquid <span style="font-weight:300;color:var(--text-3)">@liquidtrading</span></td>
+              <td>General trading venue</td>
+              <td>Casual, broad-appeal</td>
+              <td class="neg">Low relevance to EQX.</td>
+            </tr>
+            <tr>
+              <td class="val">Markets <span style="font-weight:300;color:var(--text-3)">@Markets_xyz</span></td>
+              <td>RWA perps venue</td>
+              <td>Clean, trader-focused</td>
+              <td style="color:var(--yellow)">Similar to trade.xyz — monitor for product moves.</td>
+            </tr>
+            <tr>
+              <td class="val">Hy-PURR-Liquid <span style="font-weight:300;color:var(--text-3)">@Hy_Purr_liquid</span></td>
+              <td>Community / analytics / meme</td>
+              <td>Playful, bullish, cat-themed</td>
+              <td>Useful for understanding community culture and what retail HL users engage with.</td>
+            </tr>
+            <tr>
+              <td class="val">HL Global <span style="font-weight:300;color:var(--text-3)">@HLglobal_</span></td>
+              <td>Ecosystem hub / events</td>
+              <td>Neutral facilitator</td>
+              <td class="pos">Good for ecosystem visibility — get EQX listed/featured here.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- HIP-4 × EQX NARRATIVE -->
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
+      <div class="panel-title fade-in" style="margin-bottom:0.25rem">HIP-4 × EQX — Strategic Narrative</div>
+      <div class="panel-subtitle fade-in" style="margin-bottom:1.5rem">Forward-looking thesis on how Hyperliquid's protocol evolution intersects with EQX's positioning</div>
+      <div class="hip4-grid fade-in delay-1">
+
+        <div class="hip4-card">
+          <div class="hip4-num">01</div>
+          <div class="hip4-title">The user is already there</div>
+          <div class="hip4-body">HIP-3 brought traditional traders (commodities, indices) to Hyperliquid. EQX's target user is already on the platform. No cold acquisition needed.</div>
+        </div>
+
+        <div class="hip4-card">
+          <div class="hip4-num">02</div>
+          <div class="hip4-title">HIP-4 adds tools, not competition</div>
+          <div class="hip4-body">Binary options = leveraged short-term bets. EQX spot = actual ownership. Different jobs. Same user, different moments.</div>
+        </div>
+
+        <div class="hip4-card">
+          <div class="hip4-num">03</div>
+          <div class="hip4-title">Composability is the moat</div>
+          <div class="hip4-body">Spot equity position (EQX) + binary hedge (HIP-4) + perp — all in one margin account. No other platform can offer this stack.</div>
+        </div>
+
+        <div class="hip4-card">
+          <div class="hip4-num">04</div>
+          <div class="hip4-title">Builder model = EQX's distribution logic</div>
+          <div class="hip4-body">Hyperliquid provides the engine. EQX is a builder on top. Both benefit from shared liquidity.</div>
+        </div>
+
+        <div class="hip4-card hip4-card-risk">
+          <div class="hip4-num" style="color:var(--yellow)">05</div>
+          <div class="hip4-title" style="color:var(--yellow)">The long-term risk</div>
+          <div class="hip4-body">If vanilla options (HIP-5/6) arrive alongside native equity markets, Hyperliquid could eventually replicate what EQX does. EQX's moat is the custodial layer — real shares, DTC-member bank. That's the thing to protect and communicate loudly.</div>
+        </div>
+
+        <div class="hip4-card hip4-card-thesis">
+          <div class="hip4-num" style="color:var(--green)">06</div>
+          <div class="hip4-title" style="color:var(--green)">Brand validation</div>
+          <div class="hip4-body">"Crypto is dead, real products win" is the macro thesis. EQX should <strong style="color:var(--text)">never call itself a crypto product</strong>. This gives public intellectual cover to hold that position.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ECOSYSTEM MAP -->
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
+      <div class="panel-title fade-in" style="margin-bottom:0.25rem">Hyperliquid Ecosystem Map</div>
+      <div class="panel-subtitle fade-in" style="margin-bottom:1.25rem">Full project landscape — filter by category to explore. EQX Labs highlighted.</div>
+      <div class="eco-filters fade-in delay-1" id="ecoFilters"></div>
+      <div class="eco-count fade-in delay-1" id="ecoCount"></div>
+      <div class="eco-grid fade-in delay-2" id="ecoGrid"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 2 — GLOBAL OPPORTUNITY
 ════════════════════════════════════════════════ -->
 <section class="section fade-in" id="global">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">01 — Global Opportunity</div>
+      <div class="section-label">02 — Global Opportunity</div>
       <h2 class="section-title">Crypto Ownership &amp; Retail Reach</h2>
       <p class="section-subtitle">562M global crypto owners across 20+ markets; retail trading apps growing at 20% CAGR</p>
     </div>
@@ -696,12 +1303,12 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════
-     SECTION 2 — PRIORITY MARKETS
+     SECTION 3 — PRIORITY MARKETS
 ════════════════════════════════════════════════ -->
 <section class="section fade-in" id="priority">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">02 — Priority Markets</div>
+      <div class="section-label">03 — Priority Markets</div>
       <h2 class="section-title">Target Country Data</h2>
       <p class="section-subtitle">Adult populations, crypto penetration rates, and macro signals across EQX's primary target geographies</p>
     </div>
@@ -740,12 +1347,12 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════
-     SECTION 3 — CURRENCY RISK
+     SECTION 4 — CURRENCY RISK
 ════════════════════════════════════════════════ -->
 <section class="section fade-in" id="currency">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">03 — Currency Risk</div>
+      <div class="section-label">04 — Currency Risk</div>
       <h2 class="section-title">Depreciation vs USD</h2>
       <p class="section-subtitle">Currency collapse as structural demand driver — the greater the depreciation, the greater the urgency for USD-denominated assets</p>
     </div>
@@ -778,12 +1385,12 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════
-     SECTION 4 — ON-CHAIN TRENDS
+     SECTION 5 — ON-CHAIN TRENDS
 ════════════════════════════════════════════════ -->
 <section class="section fade-in" id="onchain">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">04 — On-Chain Trends</div>
+      <div class="section-label">05 — On-Chain Trends</div>
       <h2 class="section-title">Stablecoin Growth &amp; Hyperliquid Dominance</h2>
       <p class="section-subtitle">Stablecoin market cap trajectory and Hyperliquid protocol metrics underpinning the EQX infrastructure thesis</p>
     </div>
@@ -824,12 +1431,12 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════
-     SECTION 5 — COMPETITIVE LANDSCAPE
+     SECTION 6 — COMPETITIVE LANDSCAPE
 ════════════════════════════════════════════════ -->
 <section class="section fade-in" id="competitive">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">05 — Competitive Landscape</div>
+      <div class="section-label">06 — Competitive Landscape</div>
       <h2 class="section-title">Cost Compression Analysis</h2>
       <p class="section-subtitle">All-in basis point cost to buy &amp; hold $1,000 of US equities — EQX Labs targets single-digit bp, an order of magnitude cheaper than incumbents</p>
     </div>
@@ -870,12 +1477,12 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════
-     SECTION 6 — MARKET SIZING
+     SECTION 7 — MARKET SIZING
 ════════════════════════════════════════════════ -->
 <section class="section fade-in" id="sizing">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">06 — Market Sizing</div>
+      <div class="section-label">07 — Market Sizing</div>
       <h2 class="section-title">TAM / SAM / SOM Framework</h2>
       <p class="section-subtitle">Three-tier model — 2030 projections across low, base, and high scenarios</p>
     </div>
@@ -921,14 +1528,13 @@
     </div>
   </div>
 </section>
-
 <!-- ═══════════════════════════════════════════════
-     SECTION 7 — RAW DATA
+     SECTION 8 — RAW DATA
 ════════════════════════════════════════════════ -->
 <section class="section fade-in" id="rawdata">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">07 — Raw Data</div>
+      <div class="section-label">08 — Raw Data</div>
       <h2 class="section-title">Master Data Table</h2>
       <p class="section-subtitle">All quantitative findings from the research report — searchable and filterable</p>
     </div>
@@ -966,6 +1572,183 @@
      JAVASCRIPT
 ════════════════════════════════════════════════ -->
 <script>
+// ─── ECOSYSTEM MAP ─────────────────────────────
+const ECO_CATS = {
+  'RWA/Equities':   { color: '#00e5a0', bg: 'rgba(0,229,160,0.12)'   },
+  'DEXs':           { color: '#00c8ff', bg: 'rgba(0,200,255,0.12)'   },
+  'Derivatives':    { color: '#74b9ff', bg: 'rgba(116,185,255,0.12)' },
+  'Lending':        { color: '#00b8a2', bg: 'rgba(0,184,162,0.12)'   },
+  'Yield':          { color: '#f0b429', bg: 'rgba(240,180,41,0.12)'  },
+  'Staking':        { color: '#9b6dff', bg: 'rgba(155,109,255,0.12)' },
+  'Stablecoins':    { color: '#7bed9f', bg: 'rgba(123,237,159,0.12)' },
+  'AI':             { color: '#ff7c43', bg: 'rgba(255,124,67,0.12)'  },
+  'Infra':          { color: '#0088cc', bg: 'rgba(0,136,204,0.12)'   },
+  'Launchpads':     { color: '#ffeaa7', bg: 'rgba(255,234,167,0.12)' },
+  'GambleFi':       { color: '#ff4560', bg: 'rgba(255,69,96,0.12)'   },
+  'NFT':            { color: '#fd79a8', bg: 'rgba(253,121,168,0.12)' },
+  'Gaming/Social':  { color: '#e17055', bg: 'rgba(225,112,85,0.12)'  },
+  'Points':         { color: '#fdcb6e', bg: 'rgba(253,203,110,0.12)' },
+};
+
+const ECO_PROJECTS = [
+  // RWA/Equities — EQX first (highlighted)
+  { name: 'EQX Labs',       cat: 'RWA/Equities', eqx: true,  desc: 'Spot market for real US shares on Hyperliquid. SPV + DTC-member bank custody + on-chain proof of reserves. The trust-maximised ownership layer.' },
+  { name: 'Felix',          cat: 'RWA/Equities', desc: 'Tokenised spot US stocks & ETFs via Ondo partnership. 260+ assets live on HyperEVM. First-mover spot equity layer.' },
+  { name: 'trade.xyz',      cat: 'Derivatives',  desc: 'Leading RWA perpetuals venue. Synthetic leveraged exposure to stocks, indices, commodities. Licensed S&P 500 perp. No real ownership.' },
+  { name: 'Markets',        cat: 'Derivatives',  desc: 'RWA perps venue. Clean, trader-focused. Monitor for product moves.' },
+  // DEXs
+  { name: 'ApStation',      cat: 'DEXs',         desc: 'Zero-fee modular DEX aggregator + liquidity router on Hyperliquid.' },
+  { name: 'GlueX',          cat: 'DEXs',         desc: 'Multi-chain DEX aggregator optimized for Hyperliquid routing.' },
+  { name: 'Hana',           cat: 'DEXs',         desc: 'High-performance DEX focused on low-slippage swaps.' },
+  { name: 'Matcha Meta',    cat: 'DEXs',         desc: '0x-powered DEX aggregator for Hyperliquid + cross-chain.' },
+  { name: 'DEFINITIVE',     cat: 'DEXs',         desc: 'Advanced orderbook-style DEX on HyperEVM.' },
+  { name: 'Sunder',         cat: 'DEXs',         desc: 'DeFi hub + liquidity marketplace on Hyperliquid.' },
+  { name: 'HyperBloom',     cat: 'DEXs',         desc: 'DEX aggregator + yield optimizer.' },
+  { name: 'HyperSwap',      cat: 'DEXs',         desc: 'Core AMM-style DEX for spot and liquidity pools.' },
+  { name: 'Silhouette',     cat: 'DEXs',         desc: 'Privacy-focused or lightweight DEX.' },
+  { name: 'Laminar',        cat: 'DEXs',         desc: 'Capital-efficient liquidity DEX.' },
+  { name: 'GLIQUID',        cat: 'DEXs',         desc: 'Concentrated liquidity DEX.' },
+  { name: 'Valantis',       cat: 'DEXs',         desc: 'Efficient embedded-liquidity DEX + LST infrastructure (acquired stakedHYPE).' },
+  // Staking
+  { name: 'Kinetiq',        cat: 'Staking',      desc: 'Leading LST protocol (kHYPE) for the HYPE token.' },
+  { name: 'Kintsu',         cat: 'Staking',      desc: 'Liquid staking with advanced mechanics.' },
+  { name: 'Tenderize',      cat: 'Staking',      desc: 'Liquid staking derivative platform.' },
+  { name: 'Thunderhead',    cat: 'Staking',      desc: 'High-yield staking vault.' },
+  { name: 'HyperFlash',     cat: 'Staking',      desc: 'Fast liquid staking token (LST) protocol.' },
+  { name: 'Hyperple',       cat: 'Staking',      desc: 'Memecoin launchpad + ve(3,3) DEX + liquid staking subDAO.' },
+  { name: 'HupurrCo',       cat: 'Staking',      desc: 'Community-driven staking & yield collective.' },
+  { name: 'Vapor',          cat: 'Staking',      desc: 'Staking / yield layer.' },
+  // Lending
+  { name: 'HyperLend',      cat: 'Lending',      desc: 'Core decentralised lending (Aave-like) with HPL rebates. Potential composability partner for EQX.' },
+  { name: 'Cluster',        cat: 'Lending',      desc: 'Isolated-pool lending protocol.' },
+  { name: 'TimeSwap',       cat: 'Lending',      desc: 'Time-based fixed-term lending.' },
+  { name: 'Vortx',          cat: 'Lending',      desc: 'Capital-efficient lending market.' },
+  { name: 'HeadtoHead',     cat: 'Lending',      desc: 'Peer-to-peer competitive lending.' },
+  { name: 'VEGAS',          cat: 'Lending',      desc: 'Structured lending vaults.' },
+  // Yield
+  { name: 'Hyperdrive',     cat: 'Yield',        desc: 'On-chain credit layer + liquid staking (HYPED) + RWA yield hub. "Making everything on HyperCore liquid."' },
+  { name: 'Blueberry',      cat: 'Yield',        desc: 'Automated yield optimizer.' },
+  { name: 'Upshift',        cat: 'Yield',        desc: 'Delta-neutral or automated yield strategies.' },
+  { name: 'Spectra',        cat: 'Yield',        desc: 'Yield-bearing token protocol.' },
+  { name: 'Hyperwave',      cat: 'Yield',        desc: 'Wave-based yield farming.' },
+  { name: 'Harmonix',       cat: 'Yield',        desc: 'Harmonized multi-strategy yield.' },
+  { name: 'Nucleus',        cat: 'Yield',        desc: 'Core yield nucleus hub.' },
+  { name: 'Perpflow',       cat: 'Yield',        desc: 'Perpetual funding-rate yield strategies.' },
+  // Derivatives
+  { name: 'Stratum',        cat: 'Derivatives',  desc: 'Structured finance + trading terminal. Useful tone reference for institutional-adjacent messaging.' },
+  { name: 'Liquid',         cat: 'Derivatives',  desc: 'General trading venue. Casual, broad-appeal. Low relevance to EQX.' },
+  { name: 'ChainSight',     cat: 'Derivatives',  desc: 'Derivatives analytics / trading.' },
+  { name: 'Ventuals',       cat: 'Derivatives',  desc: 'Event-based derivatives.' },
+  { name: 'Hyperdelta',     cat: 'Derivatives',  desc: 'Delta-neutral derivatives.' },
+  { name: 'Nunchi',         cat: 'Derivatives',  desc: 'Options / advanced derivatives.' },
+  { name: 'Supurr',         cat: 'Derivatives',  desc: 'Meme/perp derivatives.' },
+  { name: 'Hyperhyper',     cat: 'Derivatives',  desc: 'Hyper derivatives hub.' },
+  { name: 'Vooi',           cat: 'Derivatives',  desc: 'Derivatives aggregator.' },
+  { name: 'Pear',           cat: 'Derivatives',  desc: 'Structured derivatives.' },
+  // Stablecoins
+  { name: 'Native Markets', cat: 'Stablecoins',  desc: 'USDH issuer (Stripe Bridge-backed). 50/50 HYPE buyback / ecosystem split. Primary tone reference — leads with ecosystem alignment.' },
+  { name: 'Cathena',        cat: 'Stablecoins',  desc: 'Stablecoin or stable-yield protocol.' },
+  { name: 'Delpho',         cat: 'Stablecoins',  desc: 'Stablecoin infrastructure.' },
+  { name: 'Stable Jack',    cat: 'Stablecoins',  desc: 'Stablecoin issuer / vault.' },
+  { name: 'Hyperstable',    cat: 'Stablecoins',  desc: 'Hyperliquid-native stablecoin layer.' },
+  // AI
+  { name: 'Rei',            cat: 'AI',           desc: 'AI-powered trading / analytics.' },
+  { name: 'Hyperlauncher',  cat: 'AI',           desc: 'AI-assisted launch & optimization tool.' },
+  { name: 'Theo',           cat: 'AI',           desc: 'AI-driven RWA / treasury management.' },
+  { name: 'dotHYPE',        cat: 'AI',           desc: 'AI tooling for the HYPE ecosystem.' },
+  { name: 'Hyperfly',       cat: 'AI',           desc: 'AI agent or flywheel optimizer.' },
+  { name: 'beats ai',       cat: 'AI',           desc: 'Niche AI play — AI music / social + yield.' },
+  // Infra
+  { name: 'Unit',           cat: 'Infra',        desc: 'Decentralised asset tokenization + liquidity rail for RWAs. Primary tone reference — "We built the plumbing."' },
+  { name: 'Hypersig',       cat: 'Infra',        desc: 'Infrastructure / signing layer.' },
+  { name: 'Hyperion',       cat: 'Infra',        desc: 'Public-listed DeFi / HYPE treasury. Corporate, transparent, reports financials.' },
+  { name: 'HL Global',      cat: 'Infra',        desc: 'Ecosystem hub / events. Neutral facilitator. Get EQX listed/featured here.' },
+  // Launchpads
+  { name: 'LiquidLaunch',   cat: 'Launchpads',   desc: 'Permissionless launchpad for new tokens on Hyperliquid.' },
+  { name: 'HyperYield',     cat: 'Launchpads',   desc: 'Yield-focused launchpad & farming platform.' },
+  // GambleFi
+  { name: 'HypurrrFi',      cat: 'GambleFi',     desc: 'GambleFi / prediction market layer.' },
+  { name: 'OmniX',          cat: 'GambleFi',     desc: 'Omni-channel GambleFi platform.' },
+  // Points
+  { name: 'Rumpel',         cat: 'Points',       desc: 'Points tokenization & liquidity marketplace.' },
+  // NFT
+  { name: 'Drip.Trade',     cat: 'NFT',          desc: 'NFT trading / launch platform.' },
+  { name: 'Kittykingdom',   cat: 'NFT',          desc: 'NFT collection + gaming tie-in.' },
+  // Gaming/Social
+  { name: 'Hy-PURR-Liquid', cat: 'Gaming/Social',desc: 'Community / analytics / meme. Playful, bullish, cat-themed. Useful for understanding retail HL culture.' },
+  { name: 'thefarm.fun',    cat: 'Gaming/Social', desc: 'Social / farming game.' },
+  { name: 'Sovrun',         cat: 'Gaming/Social', desc: 'Social run / community game.' },
+];
+
+(function() {
+  const grid = document.getElementById('ecoGrid');
+  const filtersEl = document.getElementById('ecoFilters');
+  const countEl = document.getElementById('ecoCount');
+  let activeFilter = 'All';
+
+  function catStyle(cat) {
+    const c = ECO_CATS[cat] || { color: '#8892a8', bg: 'rgba(136,146,168,0.12)' };
+    return { color: c.color, bg: c.bg };
+  }
+
+  function render(filter) {
+    const list = filter === 'All' ? ECO_PROJECTS : ECO_PROJECTS.filter(p => p.cat === filter);
+    countEl.textContent = `${list.length} project${list.length !== 1 ? 's' : ''} shown`;
+    grid.innerHTML = list.map(p => {
+      const s = catStyle(p.cat);
+      const eqxClass = p.eqx ? ' eco-eqx' : '';
+      return `<div class="eco-card${eqxClass}">
+        <div class="eco-card-top">
+          <span class="eco-card-name" style="${p.eqx ? 'color:var(--green)' : ''}">${p.name}${p.eqx ? ' ★' : ''}</span>
+          <span class="eco-cat-badge" style="color:${s.color};background:${s.bg};border-color:${s.color}40">${p.cat}</span>
+        </div>
+        <div class="eco-card-desc">${p.desc}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Build filter buttons
+  const cats = ['All', ...Object.keys(ECO_CATS)];
+  filtersEl.innerHTML = cats.map(cat => {
+    const s = cat === 'All' ? { color: '#e8eaf0', bg: 'rgba(232,234,240,0.15)' } : catStyle(cat);
+    return `<button class="eco-filter-btn${cat === 'All' ? ' active' : ''}" data-cat="${cat}"
+      style="${cat === 'All' ? '' : `--eco-active-bg:${s.bg};--eco-active-color:${s.color}`}"
+      onclick="ecoFilter(this,'${cat}')">${cat}</button>`;
+  }).join('');
+
+  render('All');
+})();
+
+window.ecoFilter = function(btn, cat) {
+  document.querySelectorAll('.eco-filter-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = '';
+    b.style.color = '';
+    b.style.borderColor = '';
+  });
+  btn.classList.add('active');
+  const s = cat === 'All'
+    ? { color: '#000', bg: '#e8eaf0' }
+    : (ECO_CATS[cat] || { color: '#000', bg: '#fff' });
+  btn.style.background = s.bg;
+  btn.style.color = s.color;
+  btn.style.borderColor = s.color;
+
+  const list = cat === 'All' ? ECO_PROJECTS : ECO_PROJECTS.filter(p => p.cat === cat);
+  document.getElementById('ecoCount').textContent = `${list.length} project${list.length !== 1 ? 's' : ''} shown`;
+  document.getElementById('ecoGrid').innerHTML = list.map(p => {
+    const cs = ECO_CATS[p.cat] || { color: '#8892a8', bg: 'rgba(136,146,168,0.12)' };
+    const eqxClass = p.eqx ? ' eco-eqx' : '';
+    return `<div class="eco-card${eqxClass}">
+      <div class="eco-card-top">
+        <span class="eco-card-name" style="${p.eqx ? 'color:var(--green)' : ''}">${p.name}${p.eqx ? ' ★' : ''}</span>
+        <span class="eco-cat-badge" style="color:${cs.color};background:${cs.bg};border-color:${cs.color}40">${p.cat}</span>
+      </div>
+      <div class="eco-card-desc">${p.desc}</div>
+    </div>`;
+  }).join('');
+};
+
 // ─── GLOBAL CHART DEFAULTS ─────────────────────
 Chart.defaults.color = '#8892a8';
 Chart.defaults.font.family = "'IBM Plex Mono', monospace";
