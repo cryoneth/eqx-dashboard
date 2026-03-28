@@ -810,6 +810,64 @@
     margin-bottom: 1rem;
   }
 
+  /* ── AFFINITY SPECTRUM ── */
+  .eco-affinity-wrap {
+    margin-top: 0.6rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .eco-affinity-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #ff4560 0%, #ff7c43 28%, #4a5268 50%, #00b8a2 72%, #00e5a0 100%);
+    position: relative;
+    margin-bottom: 5px;
+  }
+  .eco-affinity-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0,0,0,0.6);
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 6px rgba(0,0,0,0.4);
+    transition: left 0.2s;
+  }
+  .eco-affinity-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .eco-affinity-ends {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--text-3);
+    letter-spacing: 0.03em;
+  }
+  .eco-affinity-score {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .eco-affinity-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .eco-affinity-row-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    width: 100%;
+    margin-bottom: 2px;
+  }
+
   @media (max-width: 900px) {
     .gtm-grid { grid-template-columns: 1fr; }
     .comparison-callout { flex-direction: column; gap: 0.5rem; }
@@ -1590,163 +1648,213 @@ const ECO_CATS = {
   'Points':         { color: '#fdcb6e', bg: 'rgba(253,203,110,0.12)' },
 };
 
+// affinity: -10 = hard competitor, 0 = neutral, +10 = ideal partner
 const ECO_PROJECTS = [
-  // RWA/Equities — EQX first (highlighted)
-  { name: 'EQX Labs',       cat: 'RWA/Equities', eqx: true,  desc: 'Spot market for real US shares on Hyperliquid. SPV + DTC-member bank custody + on-chain proof of reserves. The trust-maximised ownership layer.' },
-  { name: 'Felix',          cat: 'RWA/Equities', desc: 'Tokenised spot US stocks & ETFs via Ondo partnership. 260+ assets live on HyperEVM. First-mover spot equity layer.' },
-  { name: 'trade.xyz',      cat: 'Derivatives',  desc: 'Leading RWA perpetuals venue. Synthetic leveraged exposure to stocks, indices, commodities. Licensed S&P 500 perp. No real ownership.' },
-  { name: 'Markets',        cat: 'Derivatives',  desc: 'RWA perps venue. Clean, trader-focused. Monitor for product moves.' },
-  // DEXs
-  { name: 'ApStation',      cat: 'DEXs',         desc: 'Zero-fee modular DEX aggregator + liquidity router on Hyperliquid.' },
-  { name: 'GlueX',          cat: 'DEXs',         desc: 'Multi-chain DEX aggregator optimized for Hyperliquid routing.' },
-  { name: 'Hana',           cat: 'DEXs',         desc: 'High-performance DEX focused on low-slippage swaps.' },
-  { name: 'Matcha Meta',    cat: 'DEXs',         desc: '0x-powered DEX aggregator for Hyperliquid + cross-chain.' },
-  { name: 'DEFINITIVE',     cat: 'DEXs',         desc: 'Advanced orderbook-style DEX on HyperEVM.' },
-  { name: 'Sunder',         cat: 'DEXs',         desc: 'DeFi hub + liquidity marketplace on Hyperliquid.' },
-  { name: 'HyperBloom',     cat: 'DEXs',         desc: 'DEX aggregator + yield optimizer.' },
-  { name: 'HyperSwap',      cat: 'DEXs',         desc: 'Core AMM-style DEX for spot and liquidity pools.' },
-  { name: 'Silhouette',     cat: 'DEXs',         desc: 'Privacy-focused or lightweight DEX.' },
-  { name: 'Laminar',        cat: 'DEXs',         desc: 'Capital-efficient liquidity DEX.' },
-  { name: 'GLIQUID',        cat: 'DEXs',         desc: 'Concentrated liquidity DEX.' },
-  { name: 'Valantis',       cat: 'DEXs',         desc: 'Efficient embedded-liquidity DEX + LST infrastructure (acquired stakedHYPE).' },
-  // Staking
-  { name: 'Kinetiq',        cat: 'Staking',      desc: 'Leading LST protocol (kHYPE) for the HYPE token.' },
-  { name: 'Kintsu',         cat: 'Staking',      desc: 'Liquid staking with advanced mechanics.' },
-  { name: 'Tenderize',      cat: 'Staking',      desc: 'Liquid staking derivative platform.' },
-  { name: 'Thunderhead',    cat: 'Staking',      desc: 'High-yield staking vault.' },
-  { name: 'HyperFlash',     cat: 'Staking',      desc: 'Fast liquid staking token (LST) protocol.' },
-  { name: 'Hyperple',       cat: 'Staking',      desc: 'Memecoin launchpad + ve(3,3) DEX + liquid staking subDAO.' },
-  { name: 'HupurrCo',       cat: 'Staking',      desc: 'Community-driven staking & yield collective.' },
-  { name: 'Vapor',          cat: 'Staking',      desc: 'Staking / yield layer.' },
-  // Lending
-  { name: 'HyperLend',      cat: 'Lending',      desc: 'Core decentralised lending (Aave-like) with HPL rebates. Potential composability partner for EQX.' },
-  { name: 'Cluster',        cat: 'Lending',      desc: 'Isolated-pool lending protocol.' },
-  { name: 'TimeSwap',       cat: 'Lending',      desc: 'Time-based fixed-term lending.' },
-  { name: 'Vortx',          cat: 'Lending',      desc: 'Capital-efficient lending market.' },
-  { name: 'HeadtoHead',     cat: 'Lending',      desc: 'Peer-to-peer competitive lending.' },
-  { name: 'VEGAS',          cat: 'Lending',      desc: 'Structured lending vaults.' },
-  // Yield
-  { name: 'Hyperdrive',     cat: 'Yield',        desc: 'On-chain credit layer + liquid staking (HYPED) + RWA yield hub. "Making everything on HyperCore liquid."' },
-  { name: 'Blueberry',      cat: 'Yield',        desc: 'Automated yield optimizer.' },
-  { name: 'Upshift',        cat: 'Yield',        desc: 'Delta-neutral or automated yield strategies.' },
-  { name: 'Spectra',        cat: 'Yield',        desc: 'Yield-bearing token protocol.' },
-  { name: 'Hyperwave',      cat: 'Yield',        desc: 'Wave-based yield farming.' },
-  { name: 'Harmonix',       cat: 'Yield',        desc: 'Harmonized multi-strategy yield.' },
-  { name: 'Nucleus',        cat: 'Yield',        desc: 'Core yield nucleus hub.' },
-  { name: 'Perpflow',       cat: 'Yield',        desc: 'Perpetual funding-rate yield strategies.' },
-  // Derivatives
-  { name: 'Stratum',        cat: 'Derivatives',  desc: 'Structured finance + trading terminal. Useful tone reference for institutional-adjacent messaging.' },
-  { name: 'Liquid',         cat: 'Derivatives',  desc: 'General trading venue. Casual, broad-appeal. Low relevance to EQX.' },
-  { name: 'ChainSight',     cat: 'Derivatives',  desc: 'Derivatives analytics / trading.' },
-  { name: 'Ventuals',       cat: 'Derivatives',  desc: 'Event-based derivatives.' },
-  { name: 'Hyperdelta',     cat: 'Derivatives',  desc: 'Delta-neutral derivatives.' },
-  { name: 'Nunchi',         cat: 'Derivatives',  desc: 'Options / advanced derivatives.' },
-  { name: 'Supurr',         cat: 'Derivatives',  desc: 'Meme/perp derivatives.' },
-  { name: 'Hyperhyper',     cat: 'Derivatives',  desc: 'Hyper derivatives hub.' },
-  { name: 'Vooi',           cat: 'Derivatives',  desc: 'Derivatives aggregator.' },
-  { name: 'Pear',           cat: 'Derivatives',  desc: 'Structured derivatives.' },
-  // Stablecoins
-  { name: 'Native Markets', cat: 'Stablecoins',  desc: 'USDH issuer (Stripe Bridge-backed). 50/50 HYPE buyback / ecosystem split. Primary tone reference — leads with ecosystem alignment.' },
-  { name: 'Cathena',        cat: 'Stablecoins',  desc: 'Stablecoin or stable-yield protocol.' },
-  { name: 'Delpho',         cat: 'Stablecoins',  desc: 'Stablecoin infrastructure.' },
-  { name: 'Stable Jack',    cat: 'Stablecoins',  desc: 'Stablecoin issuer / vault.' },
-  { name: 'Hyperstable',    cat: 'Stablecoins',  desc: 'Hyperliquid-native stablecoin layer.' },
-  // AI
-  { name: 'Rei',            cat: 'AI',           desc: 'AI-powered trading / analytics.' },
-  { name: 'Hyperlauncher',  cat: 'AI',           desc: 'AI-assisted launch & optimization tool.' },
-  { name: 'Theo',           cat: 'AI',           desc: 'AI-driven RWA / treasury management.' },
-  { name: 'dotHYPE',        cat: 'AI',           desc: 'AI tooling for the HYPE ecosystem.' },
-  { name: 'Hyperfly',       cat: 'AI',           desc: 'AI agent or flywheel optimizer.' },
-  { name: 'beats ai',       cat: 'AI',           desc: 'Niche AI play — AI music / social + yield.' },
-  // Infra
-  { name: 'Unit',           cat: 'Infra',        desc: 'Decentralised asset tokenization + liquidity rail for RWAs. Primary tone reference — "We built the plumbing."' },
-  { name: 'Hypersig',       cat: 'Infra',        desc: 'Infrastructure / signing layer.' },
-  { name: 'Hyperion',       cat: 'Infra',        desc: 'Public-listed DeFi / HYPE treasury. Corporate, transparent, reports financials.' },
-  { name: 'HL Global',      cat: 'Infra',        desc: 'Ecosystem hub / events. Neutral facilitator. Get EQX listed/featured here.' },
-  // Launchpads
-  { name: 'LiquidLaunch',   cat: 'Launchpads',   desc: 'Permissionless launchpad for new tokens on Hyperliquid.' },
-  { name: 'HyperYield',     cat: 'Launchpads',   desc: 'Yield-focused launchpad & farming platform.' },
-  // GambleFi
-  { name: 'HypurrrFi',      cat: 'GambleFi',     desc: 'GambleFi / prediction market layer.' },
-  { name: 'OmniX',          cat: 'GambleFi',     desc: 'Omni-channel GambleFi platform.' },
-  // Points
-  { name: 'Rumpel',         cat: 'Points',       desc: 'Points tokenization & liquidity marketplace.' },
-  // NFT
-  { name: 'Drip.Trade',     cat: 'NFT',          desc: 'NFT trading / launch platform.' },
-  { name: 'Kittykingdom',   cat: 'NFT',          desc: 'NFT collection + gaming tie-in.' },
-  // Gaming/Social
-  { name: 'Hy-PURR-Liquid', cat: 'Gaming/Social',desc: 'Community / analytics / meme. Playful, bullish, cat-themed. Useful for understanding retail HL culture.' },
-  { name: 'thefarm.fun',    cat: 'Gaming/Social', desc: 'Social / farming game.' },
-  { name: 'Sovrun',         cat: 'Gaming/Social', desc: 'Social run / community game.' },
+  // ── RWA / Equities ───────────────────────────────────────────────────────
+  { name:'EQX Labs',       cat:'RWA/Equities', eqx:true,  affinity: 10, desc:'Spot market for real US shares on Hyperliquid. SPV + DTC-member bank custody + on-chain proof of reserves. The trust-maximised ownership layer.' },
+  { name:'Felix',          cat:'RWA/Equities', affinity: -7, desc:'Tokenised spot US stocks & ETFs via Ondo partnership. 260+ assets live on HyperEVM. First-mover spot equity layer — direct competitor for spot ownership narrative.' },
+  { name:'trade.xyz',      cat:'Derivatives',  affinity: -4, desc:'Leading RWA perpetuals venue. Synthetic leveraged exposure to stocks, indices, commodities. Licensed S&P 500 perp. Same user, different product moment.' },
+  { name:'Markets',        cat:'Derivatives',  affinity: -5, desc:'RWA perps venue. Clean, trader-focused. Similar to trade.xyz — monitor for product moves.' },
+  // ── DEXs ─────────────────────────────────────────────────────────────────
+  { name:'HyperSwap',      cat:'DEXs',         affinity:  6, desc:'Core AMM-style DEX for spot and liquidity pools. Natural liquidity partner for EQX token pairs.' },
+  { name:'Valantis',       cat:'DEXs',         affinity:  6, desc:'Efficient embedded-liquidity DEX + LST infrastructure (acquired stakedHYPE). Good example of benefit-heavy comms.' },
+  { name:'ApStation',      cat:'DEXs',         affinity:  5, desc:'Zero-fee modular DEX aggregator + liquidity router on Hyperliquid.' },
+  { name:'GlueX',          cat:'DEXs',         affinity:  5, desc:'Multi-chain DEX aggregator optimized for Hyperliquid routing.' },
+  { name:'Laminar',        cat:'DEXs',         affinity:  5, desc:'Capital-efficient liquidity DEX. Useful for EQX token liquidity provisioning.' },
+  { name:'Matcha Meta',    cat:'DEXs',         affinity:  4, desc:'0x-powered DEX aggregator for Hyperliquid + cross-chain.' },
+  { name:'HyperBloom',     cat:'DEXs',         affinity:  4, desc:'DEX aggregator + yield optimizer.' },
+  { name:'Hana',           cat:'DEXs',         affinity:  4, desc:'High-performance DEX focused on low-slippage swaps.' },
+  { name:'GLIQUID',        cat:'DEXs',         affinity:  4, desc:'Concentrated liquidity DEX.' },
+  { name:'DEFINITIVE',     cat:'DEXs',         affinity:  3, desc:'Advanced orderbook-style DEX on HyperEVM.' },
+  { name:'Sunder',         cat:'DEXs',         affinity:  3, desc:'DeFi hub + liquidity marketplace on Hyperliquid.' },
+  { name:'Silhouette',     cat:'DEXs',         affinity:  2, desc:'Privacy-focused or lightweight DEX.' },
+  // ── Staking ──────────────────────────────────────────────────────────────
+  { name:'Kinetiq',        cat:'Staking',      affinity:  4, desc:'Leading LST protocol (kHYPE) for the HYPE token. Yield composability opportunity.' },
+  { name:'Kintsu',         cat:'Staking',      affinity:  3, desc:'Liquid staking with advanced mechanics.' },
+  { name:'Tenderize',      cat:'Staking',      affinity:  3, desc:'Liquid staking derivative platform.' },
+  { name:'Thunderhead',    cat:'Staking',      affinity:  3, desc:'High-yield staking vault.' },
+  { name:'HyperFlash',     cat:'Staking',      affinity:  3, desc:'Fast liquid staking token (LST) protocol.' },
+  { name:'Vapor',          cat:'Staking',      affinity:  2, desc:'Staking / yield layer.' },
+  { name:'Hyperple',       cat:'Staking',      affinity:  2, desc:'Memecoin launchpad + ve(3,3) DEX + liquid staking subDAO.' },
+  { name:'HupurrCo',       cat:'Staking',      affinity:  2, desc:'Community-driven staking & yield collective.' },
+  // ── Lending ──────────────────────────────────────────────────────────────
+  { name:'HyperLend',      cat:'Lending',      affinity:  9, desc:'Core decentralised lending (Aave-like) with HPL rebates. Top composability target — credit against EQX equity positions is the key primitive.' },
+  { name:'Cluster',        cat:'Lending',      affinity:  6, desc:'Isolated-pool lending protocol. Could support EQX equity as collateral.' },
+  { name:'TimeSwap',       cat:'Lending',      affinity:  5, desc:'Time-based fixed-term lending. Fixed-rate borrowing against equity positions.' },
+  { name:'Vortx',          cat:'Lending',      affinity:  5, desc:'Capital-efficient lending market.' },
+  { name:'VEGAS',          cat:'Lending',      affinity:  4, desc:'Structured lending vaults.' },
+  { name:'HeadtoHead',     cat:'Lending',      affinity:  3, desc:'Peer-to-peer competitive lending.' },
+  // ── Yield ────────────────────────────────────────────────────────────────
+  { name:'Hyperdrive',     cat:'Yield',        affinity:  8, desc:'On-chain credit layer + liquid staking (HYPED) + RWA yield hub. "Making everything on HyperCore liquid" — strong narrative overlap with EQX.' },
+  { name:'Blueberry',      cat:'Yield',        affinity:  6, desc:'Automated yield optimizer. Could route yield from EQX equity positions.' },
+  { name:'Upshift',        cat:'Yield',        affinity:  5, desc:'Delta-neutral or automated yield strategies.' },
+  { name:'Spectra',        cat:'Yield',        affinity:  5, desc:'Yield-bearing token protocol.' },
+  { name:'Harmonix',       cat:'Yield',        affinity:  4, desc:'Harmonized multi-strategy yield.' },
+  { name:'Nucleus',        cat:'Yield',        affinity:  4, desc:'Core yield nucleus hub.' },
+  { name:'Hyperwave',      cat:'Yield',        affinity:  3, desc:'Wave-based yield farming.' },
+  { name:'Perpflow',       cat:'Yield',        affinity: -2, desc:'Perpetual funding-rate yield strategies. Perp-based returns compete with EQX long-term holding thesis.' },
+  // ── Derivatives ──────────────────────────────────────────────────────────
+  { name:'Stratum',        cat:'Derivatives',  affinity: -3, desc:'Structured finance + trading terminal. Tone reference for institutional-adjacent messaging.' },
+  { name:'ChainSight',     cat:'Derivatives',  affinity:  3, desc:'Derivatives analytics / trading. Analytics partner opportunity.' },
+  { name:'Vooi',           cat:'Derivatives',  affinity: -1, desc:'Derivatives aggregator. Neutral — aggregates products EQX does not offer.' },
+  { name:'Ventuals',       cat:'Derivatives',  affinity: -1, desc:'Event-based derivatives.' },
+  { name:'Pear',           cat:'Derivatives',  affinity: -3, desc:'Structured derivatives. Mild competitor in the structured product space.' },
+  { name:'Hyperdelta',     cat:'Derivatives',  affinity: -3, desc:'Delta-neutral derivatives. Competes for same capital allocation as EQX spot positions.' },
+  { name:'Liquid',         cat:'Derivatives',  affinity: -2, desc:'General trading venue. Casual, broad-appeal. Low relevance to EQX.' },
+  { name:'Supurr',         cat:'Derivatives',  affinity: -2, desc:'Meme/perp derivatives.' },
+  { name:'Hyperhyper',     cat:'Derivatives',  affinity: -2, desc:'Hyper derivatives hub.' },
+  { name:'Nunchi',         cat:'Derivatives',  affinity: -5, desc:'Options / advanced derivatives. If stock options land here, direct product competition with EQX.' },
+  // ── Stablecoins ──────────────────────────────────────────────────────────
+  { name:'Native Markets', cat:'Stablecoins',  affinity:  9, desc:'USDH issuer (Stripe Bridge-backed). 50/50 HYPE buyback / ecosystem split. Primary tone reference and settlement currency partner for EQX.' },
+  { name:'Cathena',        cat:'Stablecoins',  affinity:  4, desc:'Stablecoin or stable-yield protocol.' },
+  { name:'Delpho',         cat:'Stablecoins',  affinity:  4, desc:'Stablecoin infrastructure.' },
+  { name:'Stable Jack',    cat:'Stablecoins',  affinity:  4, desc:'Stablecoin issuer / vault.' },
+  { name:'Hyperstable',    cat:'Stablecoins',  affinity:  4, desc:'Hyperliquid-native stablecoin layer.' },
+  // ── AI ───────────────────────────────────────────────────────────────────
+  { name:'Theo',           cat:'AI',           affinity:  5, desc:'AI-driven RWA / treasury management. Possible intelligence layer for EQX portfolio analytics.' },
+  { name:'Rei',            cat:'AI',           affinity:  3, desc:'AI-powered trading / analytics. Potential analytics integration.' },
+  { name:'Hyperlauncher',  cat:'AI',           affinity:  2, desc:'AI-assisted launch & optimization tool.' },
+  { name:'dotHYPE',        cat:'AI',           affinity:  2, desc:'AI tooling for the HYPE ecosystem.' },
+  { name:'Hyperfly',       cat:'AI',           affinity:  2, desc:'AI agent or flywheel optimizer.' },
+  { name:'beats ai',       cat:'AI',           affinity:  0, desc:'Niche AI play — AI music / social + yield. No relevant overlap.' },
+  // ── Infra ────────────────────────────────────────────────────────────────
+  { name:'Unit',           cat:'Infra',        affinity:  9, desc:'Decentralised asset tokenization + liquidity rail for RWAs. Primary tone reference and potential infrastructure partner.' },
+  { name:'HL Global',      cat:'Infra',        affinity:  7, desc:'Ecosystem hub / events. Neutral facilitator — get EQX listed/featured here for maximum visibility.' },
+  { name:'Hypersig',       cat:'Infra',        affinity:  5, desc:'Infrastructure / signing layer. Custody signing infrastructure relevance.' },
+  { name:'Hyperion',       cat:'Infra',        affinity:  2, desc:'Public-listed DeFi / HYPE treasury. Corporate discipline model — interesting precedent, low direct overlap.' },
+  // ── Launchpads ───────────────────────────────────────────────────────────
+  { name:'LiquidLaunch',   cat:'Launchpads',   affinity:  2, desc:'Permissionless launchpad for new tokens on Hyperliquid.' },
+  { name:'HyperYield',     cat:'Launchpads',   affinity:  2, desc:'Yield-focused launchpad & farming platform.' },
+  // ── GambleFi ─────────────────────────────────────────────────────────────
+  { name:'HypurrrFi',      cat:'GambleFi',     affinity: -1, desc:'GambleFi / prediction market layer. Same users, different intent — no meaningful overlap.' },
+  { name:'OmniX',          cat:'GambleFi',     affinity: -1, desc:'Omni-channel GambleFi platform.' },
+  // ── Points ───────────────────────────────────────────────────────────────
+  { name:'Rumpel',         cat:'Points',       affinity:  4, desc:'Points tokenization & liquidity marketplace. Could tokenize EQX user loyalty / referral points.' },
+  // ── NFT ──────────────────────────────────────────────────────────────────
+  { name:'Drip.Trade',     cat:'NFT',          affinity:  0, desc:'NFT trading / launch platform. No relevant overlap with EQX.' },
+  { name:'Kittykingdom',   cat:'NFT',          affinity:  0, desc:'NFT collection + gaming tie-in.' },
+  // ── Gaming / Social ──────────────────────────────────────────────────────
+  { name:'Hy-PURR-Liquid', cat:'Gaming/Social',affinity:  2, desc:'Community / analytics / meme. Playful, bullish, cat-themed. Useful for retail HL cultural read.' },
+  { name:'thefarm.fun',    cat:'Gaming/Social', affinity:  0, desc:'Social / farming game.' },
+  { name:'Sovrun',         cat:'Gaming/Social', affinity:  0, desc:'Social run / community game.' },
 ];
 
-(function() {
-  const grid = document.getElementById('ecoGrid');
+// ── Affinity helpers ─────────────────────────────────────────────────────────
+function affinityMeta(score) {
+  if (score >= 8)  return { label: 'Strong Partner', color: '#00e5a0' };
+  if (score >= 5)  return { label: 'Partner',         color: '#00b8a2' };
+  if (score >= 2)  return { label: 'Ally',             color: '#00c8ff' };
+  if (score >= -1) return { label: 'Neutral',          color: '#4a5268' };
+  if (score >= -4) return { label: 'Watch',            color: '#ff7c43' };
+                   return { label: 'Competitor',       color: '#ff4560' };
+}
+function affinityPct(score) { return ((score + 10) / 20 * 100).toFixed(1) + '%'; }
+
+function renderEcoCard(p) {
+  const s  = ECO_CATS[p.cat] || { color: '#8892a8', bg: 'rgba(136,146,168,0.12)' };
+  const am = p.eqx ? { label: 'EQX Labs', color: '#00e5a0' } : affinityMeta(p.affinity);
+  const pct = affinityPct(p.eqx ? 10 : p.affinity);
+  return `<div class="eco-card${p.eqx ? ' eco-eqx' : ''}">
+    <div class="eco-card-top">
+      <span class="eco-card-name" style="${p.eqx ? 'color:var(--green)' : ''}">${p.name}${p.eqx ? ' ★' : ''}</span>
+      <span class="eco-cat-badge" style="color:${s.color};background:${s.bg};border-color:${s.color}40">${p.cat}</span>
+    </div>
+    <div class="eco-card-desc">${p.desc}</div>
+    <div class="eco-affinity-wrap">
+      <div class="eco-affinity-bar">
+        <div class="eco-affinity-dot" style="left:${pct};background:${am.color}"></div>
+      </div>
+      <div class="eco-affinity-meta">
+        <span class="eco-affinity-ends">Competitor</span>
+        <span class="eco-affinity-score" style="color:${am.color}">${am.label}</span>
+        <span class="eco-affinity-ends">Partner</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let _ecoCat = 'All';
+let _ecoAff = 'all';
+
+const AFF_TIERS = [
+  { key:'all',      label:'All',            min:-10, max:10, color:'#8892a8' },
+  { key:'strong',   label:'Strong Partner', min:8,   max:10, color:'#00e5a0' },
+  { key:'partner',  label:'Partner',        min:5,   max:7,  color:'#00b8a2' },
+  { key:'ally',     label:'Ally',           min:2,   max:4,  color:'#00c8ff' },
+  { key:'neutral',  label:'Neutral',        min:-1,  max:1,  color:'#4a5268' },
+  { key:'watch',    label:'Watch',          min:-4,  max:-2, color:'#ff7c43' },
+  { key:'comp',     label:'Competitor',     min:-10, max:-5, color:'#ff4560' },
+];
+
+(function initEcoMap() {
   const filtersEl = document.getElementById('ecoFilters');
-  const countEl = document.getElementById('ecoCount');
-  let activeFilter = 'All';
 
-  function catStyle(cat) {
-    const c = ECO_CATS[cat] || { color: '#8892a8', bg: 'rgba(136,146,168,0.12)' };
-    return { color: c.color, bg: c.bg };
-  }
-
-  function render(filter) {
-    const list = filter === 'All' ? ECO_PROJECTS : ECO_PROJECTS.filter(p => p.cat === filter);
-    countEl.textContent = `${list.length} project${list.length !== 1 ? 's' : ''} shown`;
-    grid.innerHTML = list.map(p => {
-      const s = catStyle(p.cat);
-      const eqxClass = p.eqx ? ' eco-eqx' : '';
-      return `<div class="eco-card${eqxClass}">
-        <div class="eco-card-top">
-          <span class="eco-card-name" style="${p.eqx ? 'color:var(--green)' : ''}">${p.name}${p.eqx ? ' ★' : ''}</span>
-          <span class="eco-cat-badge" style="color:${s.color};background:${s.bg};border-color:${s.color}40">${p.cat}</span>
-        </div>
-        <div class="eco-card-desc">${p.desc}</div>
-      </div>`;
-    }).join('');
-  }
-
-  // Build filter buttons
+  // ── Category filter row ──
+  const catDiv = document.createElement('div');
+  catDiv.className = 'eco-filters';
+  catDiv.id = 'ecoCatRow';
   const cats = ['All', ...Object.keys(ECO_CATS)];
-  filtersEl.innerHTML = cats.map(cat => {
-    const s = cat === 'All' ? { color: '#e8eaf0', bg: 'rgba(232,234,240,0.15)' } : catStyle(cat);
-    return `<button class="eco-filter-btn${cat === 'All' ? ' active' : ''}" data-cat="${cat}"
-      style="${cat === 'All' ? '' : `--eco-active-bg:${s.bg};--eco-active-color:${s.color}`}"
-      onclick="ecoFilter(this,'${cat}')">${cat}</button>`;
+  catDiv.innerHTML = cats.map(cat => {
+    const s = ECO_CATS[cat];
+    return `<button class="eco-filter-btn${cat==='All'?' active':''}" onclick="ecoCatFilter(this,'${cat}')">${cat}</button>`;
   }).join('');
+  filtersEl.appendChild(catDiv);
 
-  render('All');
+  // ── Affinity filter row ──
+  const affDiv = document.createElement('div');
+  affDiv.className = 'eco-affinity-filters';
+  affDiv.id = 'ecoAffRow';
+  affDiv.innerHTML = `<div class="eco-affinity-row-label">Affinity Filter</div>` +
+    AFF_TIERS.map(t =>
+      `<button class="eco-filter-btn${t.key==='all'?' active':''}" onclick="ecoAffFilter(this,'${t.key}')"
+        style="${t.key!=='all'?`--aff:${t.color}`:''}">
+        ${t.key!=='all'?`<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${t.color};margin-right:5px;vertical-align:middle"></span>`:''}${t.label}</button>`
+    ).join('');
+  filtersEl.appendChild(affDiv);
+
+  renderEcoGrid();
 })();
 
-window.ecoFilter = function(btn, cat) {
-  document.querySelectorAll('.eco-filter-btn').forEach(b => {
-    b.classList.remove('active');
-    b.style.background = '';
-    b.style.color = '';
-    b.style.borderColor = '';
+function renderEcoGrid() {
+  const tier = AFF_TIERS.find(t => t.key === _ecoAff) || AFF_TIERS[0];
+  const list = ECO_PROJECTS.filter(p => {
+    if (p.eqx) return _ecoCat === 'All' || p.cat === _ecoCat;
+    const catOk = _ecoCat === 'All' || p.cat === _ecoCat;
+    const affOk = _ecoAff === 'all' || (p.affinity >= tier.min && p.affinity <= tier.max);
+    return catOk && affOk;
+  });
+  document.getElementById('ecoCount').textContent =
+    `${list.length} project${list.length !== 1 ? 's' : ''} shown`;
+  document.getElementById('ecoGrid').innerHTML = list.map(renderEcoCard).join('');
+}
+
+window.ecoCatFilter = function(btn, cat) {
+  _ecoCat = cat;
+  document.querySelectorAll('#ecoCatRow .eco-filter-btn').forEach(b => {
+    b.classList.remove('active'); b.style.cssText = '';
   });
   btn.classList.add('active');
-  const s = cat === 'All'
-    ? { color: '#000', bg: '#e8eaf0' }
-    : (ECO_CATS[cat] || { color: '#000', bg: '#fff' });
-  btn.style.background = s.bg;
-  btn.style.color = s.color;
-  btn.style.borderColor = s.color;
+  if (cat !== 'All' && ECO_CATS[cat]) {
+    const s = ECO_CATS[cat];
+    btn.style.background = s.bg; btn.style.color = s.color; btn.style.borderColor = s.color;
+  }
+  renderEcoGrid();
+};
 
-  const list = cat === 'All' ? ECO_PROJECTS : ECO_PROJECTS.filter(p => p.cat === cat);
-  document.getElementById('ecoCount').textContent = `${list.length} project${list.length !== 1 ? 's' : ''} shown`;
-  document.getElementById('ecoGrid').innerHTML = list.map(p => {
-    const cs = ECO_CATS[p.cat] || { color: '#8892a8', bg: 'rgba(136,146,168,0.12)' };
-    const eqxClass = p.eqx ? ' eco-eqx' : '';
-    return `<div class="eco-card${eqxClass}">
-      <div class="eco-card-top">
-        <span class="eco-card-name" style="${p.eqx ? 'color:var(--green)' : ''}">${p.name}${p.eqx ? ' ★' : ''}</span>
-        <span class="eco-cat-badge" style="color:${cs.color};background:${cs.bg};border-color:${cs.color}40">${p.cat}</span>
-      </div>
-      <div class="eco-card-desc">${p.desc}</div>
-    </div>`;
-  }).join('');
+window.ecoAffFilter = function(btn, key) {
+  _ecoAff = key;
+  document.querySelectorAll('#ecoAffRow .eco-filter-btn').forEach(b => {
+    b.classList.remove('active'); b.style.cssText = '';
+  });
+  btn.classList.add('active');
+  const t = AFF_TIERS.find(x => x.key === key);
+  if (t && key !== 'all') {
+    btn.style.background = t.color + '18';
+    btn.style.color = t.color;
+    btn.style.borderColor = t.color;
+  }
+  renderEcoGrid();
 };
 
 // ─── GLOBAL CHART DEFAULTS ─────────────────────
