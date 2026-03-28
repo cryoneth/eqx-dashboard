@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQX Labs — Market Research Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3"></script>
+<style>
+  :root {
+    --bg: #07080f;
+    --bg-1: #0d0f1c;
+    --bg-2: #121526;
+    --bg-3: #191d31;
+    --border: rgba(255,255,255,0.07);
+    --border-active: rgba(0,200,255,0.3);
+    --accent: #00c8ff;
+    --accent-2: #0088cc;
+    --accent-dim: rgba(0,200,255,0.15);
+    --accent-glow: rgba(0,200,255,0.08);
+    --green: #00e5a0;
+    --red: #ff4560;
+    --yellow: #f0b429;
+    --text: #e8eaf0;
+    --text-2: #8892a8;
+    --text-3: #4a5268;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(7,8,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-mark {
+    width: 28px; height: 28px;
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .header-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  .header-title span { color: var(--text-2); font-weight: 300; }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .header-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.05em;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+  .nav-pills {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+
+  .nav-pill:hover { color: var(--accent); background: var(--accent-glow); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+
+  .section {
+    padding: 3rem 0 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-header {
+    margin-bottom: 2rem;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--text-2);
+    font-weight: 300;
+  }
+
+  /* ── KPI ROW ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+  }
+
+  .kpi-card {
+    background: var(--bg-1);
+    padding: 1.25rem 1.5rem;
+    transition: background 0.2s;
+  }
+
+  .kpi-card:hover { background: var(--bg-2); }
+
+  .kpi-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 8px;
+  }
+
+  .kpi-value {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .kpi-value .kpi-unit {
+    font-size: 13px;
+    color: var(--text-2);
+    font-weight: 300;
+  }
+
+  .kpi-change {
+    font-family: var(--mono);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .kpi-change.pos { color: var(--green); }
+  .kpi-change.neg { color: var(--red); }
+  .kpi-change.neu { color: var(--text-3); }
+
+  /* ── CHART PANELS ── */
+  .chart-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .chart-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .chart-panel {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chart-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-2), transparent);
+    opacity: 0.5;
+  }
+
+  .chart-panel-full { margin-bottom: 1.5rem; }
+
+  .panel-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    margin-bottom: 4px;
+  }
+
+  .panel-subtitle {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-bottom: 1.25rem;
+    font-weight: 300;
+  }
+
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  /* ── TABLE ── */
+  .data-table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .data-table thead th {
+    background: var(--bg-2);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s;
+  }
+
+  .data-table thead th:hover { color: var(--accent); }
+
+  .data-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  .data-table tbody tr:last-child { border-bottom: none; }
+  .data-table tbody tr:hover { background: var(--accent-glow); }
+
+  .data-table tbody td {
+    padding: 10px 14px;
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+
+  .data-table tbody td.val { color: var(--text); font-weight: 500; }
+  .data-table tbody td.neg { color: var(--red); }
+  .data-table tbody td.pos { color: var(--green); }
+  .data-table tbody td.accent { color: var(--accent); }
+  .data-table tbody td.flag { font-size: 18px; }
+
+  .sort-icon { margin-left: 4px; opacity: 0.4; }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding: 1rem 0;
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-active), transparent);
+    transform: translateY(-50%);
+  }
+
+  .timeline-items {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-3) transparent;
+  }
+
+  .timeline-item {
+    flex: 0 0 180px;
+    padding: 0 12px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .timeline-item:nth-child(odd) { padding-top: 0; padding-bottom: 80px; }
+  .timeline-item:nth-child(even) { padding-top: 80px; padding-bottom: 0; }
+
+  .timeline-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--bg);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.2s;
+  }
+
+  .timeline-item:nth-child(odd) .timeline-dot { bottom: 72px; }
+  .timeline-item:nth-child(even) .timeline-dot { top: 72px; }
+
+  .timeline-item:hover .timeline-dot {
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  .timeline-content {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    transition: border-color 0.2s;
+  }
+
+  .timeline-item:hover .timeline-content { border-color: var(--border-active); }
+
+  .timeline-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  .timeline-event {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+    line-height: 1.3;
+  }
+
+  .timeline-detail {
+    font-size: 10px;
+    color: var(--text-3);
+    line-height: 1.4;
+  }
+
+  /* ── FUNNEL / MARKET SIZE ── */
+  .market-size-viz {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 1rem 0;
+  }
+
+  .market-tier {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 700px;
+    transition: transform 0.2s;
+  }
+
+  .market-tier:hover { transform: translateX(4px); }
+
+  .market-bar {
+    height: 52px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: filter 0.2s;
+  }
+
+  .market-bar:hover { filter: brightness(1.2); }
+
+  .market-bar-inner {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+  }
+
+  .market-bar-label {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+  }
+
+  .market-meta {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .market-meta-name {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .market-meta-value {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .market-meta-range {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  .scenario-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.5rem;
+  }
+
+  .scenario-tab {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 5px 14px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+
+  .scenario-tab.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  /* ── SEARCH ── */
+  .search-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .search-input {
+    flex: 1;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--text-3); }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid;
+  }
+
+  .badge-forecast {
+    color: var(--yellow);
+    border-color: rgba(240,180,41,0.3);
+    background: rgba(240,180,41,0.07);
+  }
+
+  .badge-live {
+    color: var(--green);
+    border-color: rgba(0,229,160,0.3);
+    background: rgba(0,229,160,0.07);
+  }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .chart-grid-2, .chart-grid-3 { grid-template-columns: 1fr; }
+    .nav-pills { display: none; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+  /* ── ANIMATED ENTRY ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.5s forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+  .delay-5 { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     STICKY HEADER
+════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-logo">
+    <div class="logo-mark">EQX</div>
+    <span class="header-title">EQX Labs <span>— Market Research Dashboard</span></span>
+  </div>
+  <nav class="nav-pills">
+    <a class="nav-pill" href="#global">Global</a>
+    <a class="nav-pill" href="#priority">Priority</a>
+    <a class="nav-pill" href="#currency">Currency</a>
+    <a class="nav-pill" href="#onchain">On-Chain</a>
+    <a class="nav-pill" href="#competitive">Competitive</a>
+    <a class="nav-pill" href="#sizing">Sizing</a>
+    <a class="nav-pill" href="#rawdata">Raw Data</a>
+  </nav>
+  <div class="header-meta">
+    <span class="header-date">DATA DATE: Q1 2026</span>
+    <div class="status-dot"></div>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 1 — GLOBAL OPPORTUNITY
+════════════════════════════════════════════════ -->
+<section class="section fade-in" id="global">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">01 — Global Opportunity</div>
+      <h2 class="section-title">Crypto Ownership &amp; Retail Reach</h2>
+      <p class="section-subtitle">562M global crypto owners across 20+ markets; retail trading apps growing at 20% CAGR</p>
+    </div>
+
+    <div class="kpi-grid fade-in delay-1">
+      <div class="kpi-card">
+        <div class="kpi-label">Global Crypto Owners</div>
+        <div class="kpi-value">562<span class="kpi-unit">M</span></div>
+        <div class="kpi-change neu">2024 baseline</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Annual Retail Investors</div>
+        <div class="kpi-value">100<span class="kpi-unit">M</span></div>
+        <div class="kpi-change pos">↑ 20% CAGR</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Foreign US Equity Holdings</div>
+        <div class="kpi-value">$16.9<span class="kpi-unit">T</span></div>
+        <div class="kpi-change neu">as of Jun 2024</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Net Foreign Purchases (12M)</div>
+        <div class="kpi-value">$646.7<span class="kpi-unit">B</span></div>
+        <div class="kpi-change pos">↑ 2025</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Foreign Share of US Equities</div>
+        <div class="kpi-value">21<span class="kpi-unit">%</span></div>
+        <div class="kpi-change neu">stable 10 years</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Gen Z Investing Rate</div>
+        <div class="kpi-value">30<span class="kpi-unit">%</span></div>
+        <div class="kpi-change pos">vs 6% Boomers</div>
+      </div>
+    </div>
+
+    <div class="chart-panel chart-panel-full fade-in delay-2">
+      <div class="panel-title">Crypto Ownership by Region / Country</div>
+      <div class="panel-subtitle">Estimated crypto owners (millions) — sorted by scale</div>
+      <div class="chart-wrap" style="height:360px">
+        <canvas id="chartCryptoOwnership"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 2 — PRIORITY MARKETS
+════════════════════════════════════════════════ -->
+<section class="section fade-in" id="priority">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">02 — Priority Markets</div>
+      <h2 class="section-title">Target Country Data</h2>
+      <p class="section-subtitle">Adult populations, crypto penetration rates, and macro signals across EQX's primary target geographies</p>
+    </div>
+
+    <div class="data-table-wrap fade-in delay-1">
+      <table class="data-table" id="priorityTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable('priorityTable',0)">Country <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('priorityTable',1)">Population (M) <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('priorityTable',2)">Crypto Owners (M) <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('priorityTable',3)">Ownership Rate (%) <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('priorityTable',4)">DeFi Value Rank <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('priorityTable',5)">1Y FX vs USD (%) <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('priorityTable',6)">Policy Rate 2026 (%) <span class="sort-icon">↕</span></th>
+            <th>US Equity Demand Signal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>🇮🇳 India</td><td class="val">1,428.6</td><td class="val">97.5–119.0</td><td class="val accent">7.1–8.4</td><td class="val">1</td><td class="neg">−1.5</td><td class="val">5.25</td><td>High — LRS friction, $100B remittance</td></tr>
+          <tr><td>🇧🇷 Brazil</td><td class="val">216.4</td><td class="val">26.0–37.8</td><td class="val accent">12.0–17.5</td><td class="val">5</td><td class="neg">−5.0</td><td class="val">14.75</td><td>High — Pix on-ramps, 63% YoY growth</td></tr>
+          <tr><td>🇳🇬 Nigeria</td><td class="val">223.8</td><td class="val">13.2–28.0</td><td class="val accent">10.3–12.5</td><td class="val">3</td><td class="neg">−45.0</td><td class="val">24.75</td><td>Critical — Naira collapse, stablecoin reliance</td></tr>
+          <tr><td>🇻🇳 Vietnam</td><td class="val">98.8</td><td class="val">18.6–20.9</td><td class="val accent">18.7–21.2</td><td class="val">6</td><td class="neg">−4.8</td><td class="val">[DATA PENDING]</td><td>High — top DeFi adoption</td></tr>
+          <tr><td>🇹🇷 Turkey</td><td class="val">85.3</td><td class="val">16.5–21.8</td><td class="val accent">19.3–25.6</td><td class="val">16</td><td class="neg">−20.0</td><td class="val">37.0</td><td>High — Lira hedge demand</td></tr>
+          <tr><td>🇦🇪 UAE</td><td class="val">9.5</td><td class="val">2.9</td><td class="val accent">31.0</td><td class="val">6</td><td class="pos">0.0 (pegged)</td><td class="val">[DATA PENDING]</td><td>Medium — high wealth, pegged currency</td></tr>
+          <tr><td>🇰🇷 South Korea</td><td class="val">51.7</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="neg">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td>High — strong retail equity culture</td></tr>
+          <tr><td>🇵🇭 Philippines</td><td class="val">117.3</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="neg">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td>Medium — large diaspora 2.1M US-based</td></tr>
+          <tr><td>🇦🇷 Argentina</td><td class="val">46.0</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="neg">[DATA PENDING]</td><td class="val">29.0</td><td>Critical — policy rate 29%, inflation hedge</td></tr>
+          <tr><td>🇨🇴 Colombia</td><td class="val">52.2</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="neg">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td>Medium — LATAM growth</td></tr>
+          <tr><td>🇪🇬 Egypt</td><td class="val">105.0</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="neg">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td>Medium — currency instability</td></tr>
+          <tr><td>🇵🇰 Pakistan</td><td class="val">231.4</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td class="neg">[DATA PENDING]</td><td class="val">[DATA PENDING]</td><td>Medium — large diaspora</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 3 — CURRENCY RISK
+════════════════════════════════════════════════ -->
+<section class="section fade-in" id="currency">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">03 — Currency Risk</div>
+      <h2 class="section-title">Depreciation vs USD</h2>
+      <p class="section-subtitle">Currency collapse as structural demand driver — the greater the depreciation, the greater the urgency for USD-denominated assets</p>
+    </div>
+
+    <div class="chart-panel chart-panel-full fade-in delay-1">
+      <div class="panel-title">FX Depreciation vs USD — 1Y / 3Y / 5Y (Cumulative %)</div>
+      <div class="panel-subtitle">Deeper colour = more severe currency erosion. Note: UAE AED is pegged.</div>
+      <div class="chart-wrap" style="height:380px">
+        <canvas id="chartCurrencyDep"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-grid-2 fade-in delay-2">
+      <div class="chart-panel">
+        <div class="panel-title">EM Inflation vs Policy Rate (2024)</div>
+        <div class="panel-subtitle">Inflationary pressure forcing capital flight</div>
+        <div class="chart-wrap" style="height:260px">
+          <canvas id="chartInflation"></canvas>
+        </div>
+      </div>
+      <div class="chart-panel">
+        <div class="panel-title">Sub-Saharan Africa On-Chain Growth</div>
+        <div class="panel-subtitle">YoY adoption growth driven by Naira / stablecoin shift</div>
+        <div class="chart-wrap" style="height:260px">
+          <canvas id="chartAfricaGrowth"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 4 — ON-CHAIN TRENDS
+════════════════════════════════════════════════ -->
+<section class="section fade-in" id="onchain">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">04 — On-Chain Trends</div>
+      <h2 class="section-title">Stablecoin Growth &amp; Hyperliquid Dominance</h2>
+      <p class="section-subtitle">Stablecoin market cap trajectory and Hyperliquid protocol metrics underpinning the EQX infrastructure thesis</p>
+    </div>
+
+    <div class="chart-grid-2 fade-in delay-1">
+      <div class="chart-panel">
+        <div class="panel-title">Global Stablecoin Market Cap Growth <span class="badge badge-live">LIVE TREND</span></div>
+        <div class="panel-subtitle">USD-denominated on-chain liquidity 2020–2025 ($B)</div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="chartStablecoin"></canvas>
+        </div>
+      </div>
+      <div class="chart-panel">
+        <div class="panel-title">Hyperliquid Protocol Metrics <span class="badge badge-live">Mar 2026</span></div>
+        <div class="panel-subtitle">Monthly perp volume vs stablecoin liquidity growth</div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="chartHyperliquid"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-panel chart-panel-full fade-in delay-2">
+      <div class="panel-title">Tokenised RWA Market Growth by Asset Class <span class="badge badge-forecast">INCL. FORECAST</span></div>
+      <div class="panel-subtitle">Stacked area — total market ($B) with breakdown. Dashed = projected. Equities growing ~30× faster than treasuries.</div>
+      <div class="chart-wrap" style="height:320px">
+        <canvas id="chartRWA"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-panel chart-panel-full fade-in delay-3">
+      <div class="panel-title">Tokenised Equities Market Value — Explosive Trajectory</div>
+      <div class="panel-subtitle">Jan 2025: ~$32M → Jan 2026: $963M — a 2,878% increase in 12 months</div>
+      <div class="chart-wrap" style="height:240px">
+        <canvas id="chartTokenEquity"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 5 — COMPETITIVE LANDSCAPE
+════════════════════════════════════════════════ -->
+<section class="section fade-in" id="competitive">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">05 — Competitive Landscape</div>
+      <h2 class="section-title">Cost Compression Analysis</h2>
+      <p class="section-subtitle">All-in basis point cost to buy &amp; hold $1,000 of US equities — EQX Labs targets single-digit bp, an order of magnitude cheaper than incumbents</p>
+    </div>
+
+    <div class="chart-panel chart-panel-full fade-in delay-1">
+      <div class="panel-title">Total Transaction Cost (bps) — $1,000 US Equity Purchase</div>
+      <div class="panel-subtitle">Commission + FX spread + regulatory taxes. Lower = better. EQX highlighted.</div>
+      <div class="chart-wrap" style="height:340px">
+        <canvas id="chartCosts"></canvas>
+      </div>
+    </div>
+
+    <div class="data-table-wrap fade-in delay-2" style="margin-top:1.5rem">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th>Market</th>
+            <th>Commission (bps)</th>
+            <th>FX Spread (bps)</th>
+            <th>Regulatory/Other (bps)</th>
+            <th>Total (bps)</th>
+            <th>vs EQX Saving</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="accent">EQX Labs (Target)</td><td>Global</td><td class="pos">2–3</td><td class="pos">2–5</td><td class="pos">&lt;1</td><td class="pos accent">4–11</td><td class="pos">—</td></tr>
+          <tr><td>Interactive Brokers</td><td>Global</td><td>10*</td><td>3</td><td>1</td><td>14</td><td class="pos">~3–10 bps cheaper</td></tr>
+          <tr><td>Freetrade (Basic)</td><td>UK</td><td>0</td><td>99</td><td>1</td><td>100</td><td class="pos">~89–96 bps cheaper</td></tr>
+          <tr><td>eToro (Retail)</td><td>Global</td><td>0</td><td>75</td><td>5</td><td>80</td><td class="pos">~69–76 bps cheaper</td></tr>
+          <tr><td>Revolut (Standard)</td><td>EU/UK</td><td>25</td><td>100</td><td>2</td><td>127</td><td class="pos">~116–123 bps cheaper</td></tr>
+          <tr><td>INDmoney (India)</td><td>India</td><td>25</td><td>50–120</td><td>10</td><td>85–155</td><td class="pos">~74–151 bps cheaper</td></tr>
+          <tr><td>Bamboo/Trove (Nigeria)</td><td>Nigeria</td><td>150</td><td>100</td><td>20</td><td>270</td><td class="pos">~259–266 bps cheaper</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 6 — MARKET SIZING
+════════════════════════════════════════════════ -->
+<section class="section fade-in" id="sizing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">06 — Market Sizing</div>
+      <h2 class="section-title">TAM / SAM / SOM Framework</h2>
+      <p class="section-subtitle">Three-tier model — 2030 projections across low, base, and high scenarios</p>
+    </div>
+
+    <div class="scenario-tabs fade-in delay-1">
+      <button class="scenario-tab active" onclick="setScenario('base',this)">Base Scenario</button>
+      <button class="scenario-tab" onclick="setScenario('low',this)">Low Scenario</button>
+      <button class="scenario-tab" onclick="setScenario('high',this)">High Scenario</button>
+    </div>
+
+    <div class="chart-grid-2 fade-in delay-2">
+      <div>
+        <!-- Market funnel -->
+        <div id="marketFunnel"></div>
+      </div>
+      <div class="chart-panel">
+        <div class="panel-title">SOM Projection 2026–2030 <span class="badge badge-forecast">MODELLED</span></div>
+        <div class="panel-subtitle">Tokenised US equity obtainable market ($B) — base scenario with formula V₂₀₂₆·(1+g)ⁿ</div>
+        <div class="chart-wrap" style="height:300px">
+          <canvas id="chartSOM"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-panel chart-panel-full fade-in delay-3" style="margin-top:1.5rem">
+      <div class="panel-title">Institutional RWA Projections (2030 / 2033) — $ Trillions</div>
+      <div class="panel-subtitle">Analyst consensus on total tokenised asset market size. EQX addresses the US equities subset.</div>
+      <div class="chart-wrap" style="height:260px">
+        <canvas id="chartInstitutional"></canvas>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="section-header" style="margin-top:2.5rem">
+      <div class="panel-title">RWA Institutional Adoption Milestones</div>
+      <div class="panel-subtitle">Key events shaping the tokenised equity landscape — scroll to explore</div>
+    </div>
+    <div class="chart-panel fade-in delay-4" style="padding:1.5rem 1.5rem 0.5rem">
+      <div class="timeline">
+        <div class="timeline-line"></div>
+        <div class="timeline-items" id="timelineItems"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 7 — RAW DATA
+════════════════════════════════════════════════ -->
+<section class="section fade-in" id="rawdata">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">07 — Raw Data</div>
+      <h2 class="section-title">Master Data Table</h2>
+      <p class="section-subtitle">All quantitative findings from the research report — searchable and filterable</p>
+    </div>
+
+    <div class="search-row fade-in delay-1">
+      <input class="search-input" id="masterSearch" placeholder="Filter by metric, geography, source…" oninput="filterMaster()" />
+    </div>
+
+    <div class="data-table-wrap fade-in delay-2">
+      <table class="data-table" id="masterTable">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Value</th>
+            <th>Unit</th>
+            <th>Geography</th>
+            <th>Year</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody id="masterTableBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  EQX LABS — MARKET RESEARCH DASHBOARD · DATA DATE: Q1 2026 · SOURCE: CHAINALYSIS, PWC, MCKINSEY, BCG/RIPPLE, GALAXY DIGITAL, HYPERLIQUID PROTOCOL
+</footer>
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════ -->
+<script>
+// ─── GLOBAL CHART DEFAULTS ─────────────────────
+Chart.defaults.color = '#8892a8';
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.font.size = 11;
+Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(13,15,28,0.95)';
+Chart.defaults.plugins.tooltip.borderColor = 'rgba(0,200,255,0.3)';
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+Chart.defaults.plugins.tooltip.titleColor = '#00c8ff';
+Chart.defaults.plugins.tooltip.bodyColor = '#e8eaf0';
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.padding = 16;
+
+const ACCENT = '#00c8ff';
+const ACCENT2 = '#0088cc';
+const GREEN = '#00e5a0';
+const RED = '#ff4560';
+const YELLOW = '#f0b429';
+const ORANGE = '#ff7c43';
+const PURPLE = '#9b6dff';
+const TEAL = '#00b8a2';
+
+// ─── 1. CRYPTO OWNERSHIP BAR ───────────────────
+new Chart(document.getElementById('chartCryptoOwnership'), {
+  type: 'bar',
+  data: {
+    labels: ['India','Vietnam','Brazil','Turkey','Nigeria','UAE','LATAM (ex-BR)','SE Asia (ex-VN)','Sub-Saharan Africa (ex-NG)','Eastern Europe','Western Europe','North America (ex-US)','US Immigrants'],
+    datasets: [{
+      label: 'Est. Crypto Owners (M)',
+      data: [108, 19.8, 32, 19.2, 20.6, 2.9, 15, 22, 18, 14, 12, 9, 8],
+      backgroundColor: [
+        ACCENT, ACCENT2, '#006fa8', '#005580', '#00a0d0','#33d4ff',
+        '#004060','#003350','#002640','#001a30','#001020','#000a15','#00060e'
+      ].map(c => c),
+      borderWidth: 0,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.raw}M crypto owners`,
+          afterLabel: ctx => {
+            const rates = {'India':'~7.1–8.4%','Vietnam':'~18.7–21.2%','Brazil':'~12–17.5%','Turkey':'~19.3–25.6%','Nigeria':'~10.3–12.5%','UAE':'~31%'};
+            return rates[ctx.label] ? `Ownership rate: ${rates[ctx.label]}` : '';
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => v+'M' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ─── 3. CURRENCY DEPRECIATION ──────────────────
+const fxCountries = ['Nigeria','Turkey','Argentina','Brazil','Vietnam','India','UAE'];
+const fx1y = [45, 20, 28, 5, 4.8, 1.5, 0];
+const fx3y = [85, 55, 72, 18, 12, 8, 0];
+const fx5y = [140, 90, 110, 35, 20, 12, 0];
+
+new Chart(document.getElementById('chartCurrencyDep'), {
+  type: 'bar',
+  data: {
+    labels: fxCountries,
+    datasets: [
+      { label: '1-Year Depreciation %', data: fx1y, backgroundColor: 'rgba(0,200,255,0.5)', borderColor: ACCENT, borderWidth: 1, borderRadius: 3 },
+      { label: '3-Year Depreciation %', data: fx3y, backgroundColor: 'rgba(255,124,67,0.5)', borderColor: ORANGE, borderWidth: 1, borderRadius: 3 },
+      { label: '5-Year Depreciation %', data: fx5y, backgroundColor: 'rgba(255,69,96,0.5)', borderColor: RED, borderWidth: 1, borderRadius: 3 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}% vs USD` } }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => v+'%' } }
+    }
+  }
+});
+
+// ─── INFLATION VS POLICY RATE ───────────────────
+new Chart(document.getElementById('chartInflation'), {
+  type: 'bar',
+  data: {
+    labels: ['Turkey','Nigeria','Brazil','India'],
+    datasets: [
+      { label: 'Avg Inflation 2024 (%)', data: [60, 33.7, 4.5, 5.1], backgroundColor: 'rgba(255,69,96,0.6)', borderColor: RED, borderWidth: 1, borderRadius: 3 },
+      { label: 'Policy Rate 2026 (%)', data: [37, 24.75, 14.75, 5.25], backgroundColor: 'rgba(0,200,255,0.4)', borderColor: ACCENT, borderWidth: 1, borderRadius: 3 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}%` } } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => v+'%' } }
+    }
+  }
+});
+
+// ─── AFRICA GROWTH ─────────────────────────────
+new Chart(document.getElementById('chartAfricaGrowth'), {
+  type: 'bar',
+  data: {
+    labels: ['LATAM 2025','Sub-Saharan Africa 2025','SE Asia 2025','Global Avg'],
+    datasets: [{
+      label: 'YoY On-Chain Growth %',
+      data: [63, 52, 35, 20],
+      backgroundColor: [GREEN, TEAL, ACCENT2, '#4a5268'],
+      borderWidth: 0, borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw}% YoY growth` } } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => v+'%' } }
+    }
+  }
+});
+
+// ─── 4. STABLECOIN GROWTH ──────────────────────
+const stableYears = ['Jan 2020','Jan 2021','Jan 2022','Jan 2023','Jan 2024','Jan 2025','Mar 2026'];
+const stableCap   = [5.2, 25.1, 135, 137, 138, 170, 210];
+new Chart(document.getElementById('chartStablecoin'), {
+  type: 'line',
+  data: {
+    labels: stableYears,
+    datasets: [{
+      label: 'Global Stablecoin Market Cap ($B)',
+      data: stableCap,
+      borderColor: ACCENT,
+      backgroundColor: 'rgba(0,200,255,0.08)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 4,
+      pointBackgroundColor: ACCENT,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` $${ctx.raw}B market cap` } }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => '$'+v+'B' } }
+    }
+  }
+});
+
+// ─── HYPERLIQUID METRICS ───────────────────────
+new Chart(document.getElementById('chartHyperliquid'), {
+  type: 'bar',
+  data: {
+    labels: ['Perp Vol\n(30D, $B)','Spot Vol\n(30D, $B)','TVL\n($B)','Stablecoin\nLiquidity ($B)','Ann. Rev\n($M ÷10)'],
+    datasets: [{
+      label: 'Hyperliquid Metrics',
+      data: [207.6, 4.2, 4.88, 5.6, 75.3],
+      backgroundColor: [ACCENT, ACCENT2, TEAL, GREEN, PURPLE],
+      borderWidth: 0, borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => {
+            const units = ['$207.6B perp vol (30D)','$4.2B spot vol (30D)','$4.88B TVL','$5.6B stablecoin liquidity','$752.9M annualised revenue'];
+            return ' ' + units[ctx.dataIndex];
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' } }
+    }
+  }
+});
+
+// ─── 5. TOKENISED RWA STACKED AREA ─────────────
+const rwaYears = ['2022','2023','2024','Q1 2026'];
+new Chart(document.getElementById('chartRWA'), {
+  type: 'line',
+  data: {
+    labels: rwaYears,
+    datasets: [
+      { label: 'Treasuries ($B)', data: [0.1, 0.8, 9.3, 12.0], fill: true, backgroundColor: 'rgba(0,200,255,0.25)', borderColor: ACCENT, tension: 0.4, borderWidth: 2 },
+      { label: 'Private Credit ($B)', data: [0.05, 0.3, 2.5, 4.0], fill: true, backgroundColor: 'rgba(155,109,255,0.2)', borderColor: PURPLE, tension: 0.4, borderWidth: 2 },
+      { label: 'Equities ($B)', data: [0.005, 0.015, 0.032, 0.963], fill: true, backgroundColor: 'rgba(0,229,160,0.25)', borderColor: GREEN, tension: 0.4, borderWidth: 2 },
+      { label: 'Commodities ($B)', data: [0.02, 0.08, 0.3, 0.5], fill: true, backgroundColor: 'rgba(240,180,41,0.2)', borderColor: YELLOW, tension: 0.4, borderWidth: 2 },
+      { label: 'Other ($B)', data: [0.01, 0.05, 0.2, 0.4], fill: true, backgroundColor: 'rgba(255,69,96,0.15)', borderColor: RED, tension: 0.4, borderWidth: 2 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { tooltip: { mode: 'index', intersect: false } },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => '$'+v+'B' }, stacked: false }
+    }
+  }
+});
+
+// ─── TOKENISED EQUITY TRAJECTORY ───────────────
+new Chart(document.getElementById('chartTokenEquity'), {
+  type: 'line',
+  data: {
+    labels: ['Jan 2025','Feb 2025','Mar 2025','Apr 2025','May 2025','Jun 2025','Jul 2025','Aug 2025','Sep 2025','Oct 2025','Nov 2025','Dec 2025','Jan 2026'],
+    datasets: [{
+      label: 'Tokenised Equities Market Cap ($M)',
+      data: [32, 38, 48, 58, 72, 95, 120, 160, 220, 380, 580, 750, 963],
+      borderColor: GREEN,
+      backgroundColor: 'rgba(0,229,160,0.1)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 4,
+      pointBackgroundColor: GREEN,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` $${ctx.raw}M tokenised equity market cap` } }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => '$'+v+'M' } }
+    }
+  }
+});
+
+// ─── 7. COMPETITOR COSTS ───────────────────────
+const costLabels = ['Bamboo/Trove (Nigeria)','Revolut (Standard)','INDmoney (India)','Freetrade (Basic)','eToro (Retail)','Interactive Brokers','EQX Labs (Target)'];
+const costData   = [270, 127, 120, 100, 80, 14, 7.5];
+const costColors = costLabels.map(l => l.includes('EQX') ? GREEN : ACCENT2);
+
+new Chart(document.getElementById('chartCosts'), {
+  type: 'bar',
+  data: {
+    labels: costLabels,
+    datasets: [{
+      label: 'Total Cost (bps)',
+      data: costData,
+      backgroundColor: costColors,
+      borderWidth: 0,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.raw} basis points total cost`,
+          afterLabel: ctx => ctx.label.includes('EQX') ? '★ Target — commission 2-3bps, FX 2-5bps' : `vs EQX: ${(ctx.raw - 7.5).toFixed(0)} bps more expensive`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => v+' bps' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ─── 8. TAM/SAM/SOM ────────────────────────────
+const scenarios = {
+  base: { tam: 24.8, sam: 4.8, som: 150, tamLabel:'$24.8T', samLabel:'$4.8T', somLabel:'$150B' },
+  low:  { tam: 20.5, sam: 3.5, som: 45,  tamLabel:'$20.5T', samLabel:'$3.5T', somLabel:'$45B' },
+  high: { tam: 31.0, sam: 9.3, som: 750, tamLabel:'$31.0T', samLabel:'$9.3T', somLabel:'$750B' },
+};
+
+function renderFunnel(s) {
+  const d = scenarios[s];
+  document.getElementById('marketFunnel').innerHTML = `
+    <div class="market-size-viz">
+      <div class="market-tier">
+        <div class="market-bar" style="width:100%;background:linear-gradient(90deg,rgba(0,200,255,0.18),rgba(0,200,255,0.08));border:1px solid rgba(0,200,255,0.3)">
+          <div class="market-bar-label" style="color:#00c8ff">TAM</div>
+        </div>
+        <div class="market-meta">
+          <div class="market-meta-name" style="color:#00c8ff">Total Addressable Market</div>
+          <div class="market-meta-value">${d.tamLabel}</div>
+          <div class="market-meta-range">Foreign-held US equities (2030 proj.)</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-3);padding:2px 0">▼ ${(d.sam/d.tam*100).toFixed(1)}% of TAM</div>
+      <div class="market-tier">
+        <div class="market-bar" style="width:80%;background:linear-gradient(90deg,rgba(155,109,255,0.2),rgba(155,109,255,0.08));border:1px solid rgba(155,109,255,0.35)">
+          <div class="market-bar-label" style="color:#9b6dff">SAM</div>
+        </div>
+        <div class="market-meta">
+          <div class="market-meta-name" style="color:#9b6dff">Serviceable Addressable Market</div>
+          <div class="market-meta-value">${d.samLabel}</div>
+          <div class="market-meta-range">Retail via digital/e-brokerage (2030 proj.)</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-3);padding:2px 0">▼ ${(d.som/(d.sam*1000)*100).toFixed(2)}% of SAM</div>
+      <div class="market-tier">
+        <div class="market-bar" style="width:55%;background:linear-gradient(90deg,rgba(0,229,160,0.2),rgba(0,229,160,0.08));border:1px solid rgba(0,229,160,0.35)">
+          <div class="market-bar-label" style="color:#00e5a0">SOM</div>
+        </div>
+        <div class="market-meta">
+          <div class="market-meta-name" style="color:#00e5a0">Serviceable Obtainable Market</div>
+          <div class="market-meta-value" style="color:#00e5a0">${d.somLabel}</div>
+          <div class="market-meta-range">On-chain tokenised US equities (2030 proj.)</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+renderFunnel('base');
+
+function setScenario(s, el) {
+  document.querySelectorAll('.scenario-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderFunnel(s);
+  updateSOMChart(s);
+}
+
+// ─── SOM PROJECTION CHART ──────────────────────
+const somData = {
+  base: [1.0, 3.5, 12, 40, 150],
+  low:  [1.0, 2.0, 6,  18, 45],
+  high: [1.0, 5.0, 20, 80, 750],
+};
+
+const somChart = new Chart(document.getElementById('chartSOM'), {
+  type: 'line',
+  data: {
+    labels: ['2026','2027','2028','2029','2030'],
+    datasets: [{
+      label: 'SOM ($B) — Base Scenario',
+      data: somData.base,
+      borderColor: GREEN,
+      backgroundColor: 'rgba(0,229,160,0.1)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 5,
+      pointBackgroundColor: GREEN,
+      borderDash: [6,3],
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` $${ctx.raw}B projected SOM` } }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => '$'+v+'B' }, type: 'logarithmic' }
+    }
+  }
+});
+
+function updateSOMChart(s) {
+  somChart.data.datasets[0].data = somData[s];
+  somChart.data.datasets[0].label = `SOM ($B) — ${s.charAt(0).toUpperCase()+s.slice(1)} Scenario`;
+  somChart.update();
+}
+
+// ─── INSTITUTIONAL PROJECTIONS ─────────────────
+new Chart(document.getElementById('chartInstitutional'), {
+  type: 'bar',
+  data: {
+    labels: ['McKinsey\n(Mid 2030)','BCG/Ripple\n(Mid 2033+)','PwC Funds\n(2030)','Galaxy Digital\n(Mid 2030)','EQX Labs\nSOM (2030)'],
+    datasets: [{
+      label: 'Projection ($ Trillion)',
+      data: [3.0, 17.45, 0.715, 2.85, 0.15],
+      backgroundColor: [ACCENT, ACCENT2, PURPLE, TEAL, GREEN],
+      borderWidth: 0, borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` $${ctx.raw}T projected market`,
+          afterLabel: ctx => {
+            const notes = ['Range: $2–4T','Range: $16–18.9T','CAGR: 41% (Tokenised Funds)','Range: $1.9–3.8T','Base scenario: $150B SOM'];
+            return notes[ctx.dataIndex] || '';
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => '$'+v+'T' } }
+    }
+  }
+});
+
+// ─── TIMELINE ──────────────────────────────────
+const timelineEvents = [
+  { date: 'Apr 2023', event: 'Franklin Templeton BENJI', detail: 'On-chain money market fund on Stellar/Polygon. First major TradFi tokenised fund.' },
+  { date: 'Mar 2024', event: 'BlackRock BUIDL', detail: 'BlackRock tokenised treasury fund. Securitize manages $4B+ across tokenised funds.' },
+  { date: 'May 2024', event: 'T+1 Settlement', detail: 'US SEC moves to T+1 clearing, pressuring decentralised platforms on real-time collateralisation.' },
+  { date: 'Jul 2024', event: 'GENIUS Act Progress', detail: 'US stablecoin legislation advances; USDH positioned as compliant native Hyperliquid stablecoin.' },
+  { date: 'Sep 2024', event: 'Backed / xStocks', detail: 'Kraken acquires Backed Finance. xStocks AUM grows 9× in 5 months to $186M.' },
+  { date: 'Sep 2025', event: 'Ondo Global Markets', detail: '$350M TVL within weeks of launch. 200+ tokenised US equities and ETFs. $8.7B vol in 6 months.' },
+  { date: 'Oct 2025', event: 'Nasdaq RWA Filing', detail: 'Nasdaq files with regulators for tokenised equity settlement infrastructure.' },
+  { date: 'Nov 2025', event: 'SEC / Ondo Closure', detail: 'SEC closes investigation into Ondo Finance without charges — landmark for RWA legal clarity.' },
+  { date: 'Dec 2025', event: 'Franklin+Ondo ETF', detail: 'Franklin Templeton collaborates with Ondo to tokenise 5 ETFs on-chain.' },
+  { date: 'Q4 2025', event: 'USDH Auction', detail: 'Hyperliquid governance auctions USDH ticker. Paxos, Ethena, Native Markets bid with 50–95% HYPE buyback models.' },
+  { date: 'Q1 2026', event: 'Native Markets / Bridge', detail: 'Stripe Bridge-backed Native Markets wins USDH. 50/50 HYPE buyback / ecosystem split.' },
+  { date: '2026+', event: 'EQX Labs Launch', detail: 'Spot market for real US equities on Hyperliquid. Target: 4–11 bps all-in cost for non-US retail.' },
+];
+
+const container = document.getElementById('timelineItems');
+timelineEvents.forEach((ev, i) => {
+  const div = document.createElement('div');
+  div.className = 'timeline-item';
+  const isOdd = i % 2 === 0;
+  div.innerHTML = `
+    <div class="timeline-content ${isOdd ? '' : ''}">
+      <div class="timeline-date">${ev.date}</div>
+      <div class="timeline-event">${ev.event}</div>
+      <div class="timeline-detail">${ev.detail}</div>
+    </div>
+    <div class="timeline-dot"></div>
+  `;
+  container.appendChild(div);
+});
+
+// ─── MASTER DATA TABLE ─────────────────────────
+const masterData = [
+  ['Foreign Holdings of US Securities','30.9','Trillion USD','Global (ex-US)','2024','Macro'],
+  ['Foreign Holdings of US Equities','16.9','Trillion USD','Global (ex-US)','2024','Macro'],
+  ['Net Foreign US Stock Purchases (12M)','646.7','Billion USD','Global (ex-US)','2025','Macro'],
+  ['Foreign Share of US Equities','21','%','Global (ex-US)','2024','Macro'],
+  ['Global Retail Investors (Annual)','100.0','Million','Global','2024','Retail'],
+  ['Stock Trading App Usage CAGR','20.0','%','Global','2024','Retail'],
+  ['Gen Z Investment Entry Rate','30','%','Global','2024','Demographics'],
+  ['Millennial Investment Entry Rate','15','%','Global','2024','Demographics'],
+  ['Gen X Investment Entry Rate','9','%','Global','2024','Demographics'],
+  ['Boomer Investment Entry Rate','6','%','Global','2024','Demographics'],
+  ['EM Investors Holding Derivatives','36','%','Emerging Markets','2024','Retail'],
+  ['EM Willingness for AI Portfolio Mgmt','48','%','Emerging Markets','2024','Retail'],
+  ['India Crypto Ownership Rate','7.1–8.4','%','India','2025','Crypto'],
+  ['India Crypto Owners (Est.)','93–119','Million','India','2025','Crypto'],
+  ['India Population','1,428.6','Million','India','2024','Macro'],
+  ['India Remittance Inflow (Annual)','100','Billion USD','India','2024','Macro'],
+  ['India LRS Currency Conversion Cost','0.5–1.2','%','India','2024','Cost'],
+  ['India 1Y FX vs USD','−1.5','%','India','2024','FX'],
+  ['India Policy Rate','5.25','%','India','2026','Macro'],
+  ['India GDP Growth','7.4','%','India','2024','Macro'],
+  ['Brazil Crypto Ownership Rate','12–17.5','%','Brazil','2024','Crypto'],
+  ['Brazil Crypto Owners','26.0–37.8','Million','Brazil','2024','Crypto'],
+  ['Brazil Population','216.4','Million','Brazil','2024','Macro'],
+  ['Brazil On-Chain Volume','500+','Billion USD','Brazil','2024','On-Chain'],
+  ['Brazil 1Y FX vs USD','−5.0','%','Brazil','2024','FX'],
+  ['Brazil Policy Rate','14.75','%','Brazil','2026','Macro'],
+  ['LATAM On-Chain Growth (YoY)','63','%','Latin America','2025','On-Chain'],
+  ['Nigeria Crypto Ownership Rate','10.3–12.5','%','Nigeria','2024','Crypto'],
+  ['Nigeria Crypto Owners','13.2–28.0','Million','Nigeria','2024','Crypto'],
+  ['Nigeria Population','223.8','Million','Nigeria','2024','Macro'],
+  ['Nigeria 1Y FX vs USD (Naira)','−45.0','%','Nigeria','2024','FX'],
+  ['Nigeria Policy Rate','24.75','%','Nigeria','2026','Macro'],
+  ['Nigeria DeFi Value Rank','3rd Global','Rank','Nigeria','2025','On-Chain'],
+  ['Sub-Saharan Africa On-Chain Growth','52','% YoY','Sub-Saharan Africa','2025','On-Chain'],
+  ['Vietnam Crypto Ownership Rate','18.7–21.2','%','Vietnam','2024–25','Crypto'],
+  ['Vietnam Crypto Owners','18.6–20.9','Million','Vietnam','2024–25','Crypto'],
+  ['Vietnam Population','98.8','Million','Vietnam','2024','Macro'],
+  ['Vietnam 1Y FX vs USD','−4.8','%','Vietnam','2024','FX'],
+  ['Turkey Crypto Ownership Rate','19.3–25.6','%','Turkey','2024','Crypto'],
+  ['Turkey Crypto Owners','16.5–21.8','Million','Turkey','2024','Crypto'],
+  ['Turkey Population','85.3','Million','Turkey','2024','Macro'],
+  ['Turkey 1Y FX vs USD','−20.0','%','Turkey','2024','FX'],
+  ['Turkey Avg Inflation','60.0','%','Turkey','2024','Macro'],
+  ['Turkey Policy Rate','37.0','%','Turkey','2026','Macro'],
+  ['UAE Crypto Ownership Rate','31.0','%','UAE','2024','Crypto'],
+  ['UAE Crypto Owners','2.9','Million','UAE','2024','Crypto'],
+  ['UAE Population','9.5','Million','UAE','2024','Macro'],
+  ['US Immigrant Population','53.3','Million','USA','Jan 2025','Demographics'],
+  ['Hyperliquid 30-Day Perp Volume','207.6','Billion USD','On-chain','Mar 2026','On-Chain'],
+  ['Hyperliquid 24H Perp Volume','6.7','Billion USD','On-chain','Mar 2026','On-Chain'],
+  ['Hyperliquid 30-Day Spot Volume','4.2','Billion USD','On-chain','Mar 2026','On-Chain'],
+  ['Hyperliquid Total Value Locked','4.88','Billion USD','On-chain','Mar 2026','On-Chain'],
+  ['Hyperliquid Market Cap','89.25','Billion USD','On-chain','Mar 2026','On-Chain'],
+  ['Hyperliquid Annualised Revenue','752.9','Million USD','On-chain','Mar 2026','On-Chain'],
+  ['Hyperliquid Stablecoin Liquidity','5.6','Billion USD','On-chain','2025','On-Chain'],
+  ['USDC Share of Hyperliquid Liquidity','~95','%','On-chain','2025','On-Chain'],
+  ['Hyperliquid Perp Market Share (2025)','70–80','%','Decentralised Perps','Mid-2025','On-Chain'],
+  ['Hyperliquid Cumulative Perp Volume','2.5+','Trillion USD','On-chain','2026','On-Chain'],
+  ['Hyperliquid Effective Fee Rate','~3.3','basis points','On-chain','2026','Cost'],
+  ['Tokenised Equities Market Value (Jan 2026)','963.04','Million USD','Global','Jan 2026','RWA'],
+  ['Tokenised Equities Market Value (Jan 2025)','~32','Million USD','Global','Jan 2025','RWA'],
+  ['Tokenised Equities YoY Growth','~2,878','%','Global','2025–26','RWA'],
+  ['Tokenised Equities Holder Growth','22.7','% MoM','Global','2025','RWA'],
+  ['Tokenised Equities Unique Holders','159,000','Holders','Global','2026','RWA'],
+  ['Tokenised Treasury Market Value','9.3','Billion USD','Global','2026','RWA'],
+  ['Ondo Global Markets TVL (Oct 2025)','350','Million USD','Global','Oct 2025','RWA'],
+  ['Ondo 6-Month Volume','8.7','Billion USD','Global','2025–26','RWA'],
+  ['Backed Finance / xStocks AUM','186','Million USD','Global','2025','RWA'],
+  ['Backed Finance Transaction Volume','10+','Billion USD','Global','2025','RWA'],
+  ['Securitize Tokenised Fund AUM','4+','Billion USD','Global','2025','RWA'],
+  ['PwC 2030 Tokenised Fund AUM Projection','715','Billion USD','Global','2030 proj.','Forecast'],
+  ['PwC Tokenised Fund AUM CAGR','41.0','%','Global','2024–30','Forecast'],
+  ['McKinsey 2030 RWA Projection (Range)','2.0–4.0','Trillion USD','Global','2030 proj.','Forecast'],
+  ['BCG/Ripple 2033 RWA Projection (Range)','16.0–18.9','Trillion USD','Global','2033+ proj.','Forecast'],
+  ['Galaxy Digital 2030 Projection (Range)','1.9–3.8','Trillion USD','Global','2030 proj.','Forecast'],
+  ['EQX Labs SOM 2030 (Base)','150','Billion USD','Global','2030 proj.','EQX Model'],
+  ['EQX Labs SOM 2030 (Low)','45','Billion USD','Global','2030 proj.','EQX Model'],
+  ['EQX Labs SOM 2030 (High)','750','Billion USD','Global','2030 proj.','EQX Model'],
+  ['EQX Labs TAM 2024 Baseline','16.99','Trillion USD','Global','2024','EQX Model'],
+  ['EQX Labs TAM 2030 Projection','24.8','Trillion USD','Global','2030 proj.','EQX Model'],
+  ['EQX Labs SAM 2024 Baseline','2.42','Trillion USD','Global','2024','EQX Model'],
+  ['EQX Labs SAM 2030 Projection','4.8','Trillion USD','Global','2030 proj.','EQX Model'],
+  ['PwC 2030 Global AUM Projection','200.0','Trillion USD','Global','2030 proj.','Forecast'],
+  ['e-Brokerage Market CAGR','9.57','%','Global','2026–34','Market'],
+  ['Global Crypto Owners (Total)','562.0','Million','Global','2024','Crypto'],
+  ['Retail Participation Rate (US/UK/SK)','20–35','%','Multi-region','2025','Retail'],
+  ['Retail Participation Rate (India/China)','40–50','%','Multi-region','2025','Retail'],
+  ['After-Hours Equity Volume Share','10.8','%','USA','2024','Market'],
+  ['Off-Exchange Trading Share','50+','%','USA','2024','Market'],
+  ['Trade-Weighted USD Appreciation (2024)','9.0','%','Global','2024','FX'],
+  ['USD vs EM Currencies (2024)','10.3','%','Emerging Markets','2024','FX'],
+  ['IBKR Commission','10*','bps','Global','2024','Cost'],
+  ['IBKR FX Spread','3','bps','Global','2024','Cost'],
+  ['eToro Total Cost','80','bps','Global','2024','Cost'],
+  ['Revolut Total Cost','127','bps','UK/EU','2024','Cost'],
+  ['INDmoney Total Cost','85–155','bps','India','2024','Cost'],
+  ['Bamboo/Trove Total Cost','270','bps','Nigeria','2024','Cost'],
+  ['EQX Labs Target Total Cost','4–11','bps','Global','Target','Cost'],
+  ['EQX Labs Target Commission','1–5','bps','Global','Target','Cost'],
+  ['EQX Labs Target FX Spread','2–5','bps','Global','Target','Cost'],
+];
+
+const tbody = document.getElementById('masterTableBody');
+masterData.forEach(row => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${row[0]}</td>
+    <td class="val">${row[1]}</td>
+    <td style="color:var(--text-3)">${row[2]}</td>
+    <td style="color:var(--text-3)">${row[3]}</td>
+    <td style="color:var(--text-3)">${row[4]}</td>
+    <td><span style="font-size:10px;padding:2px 6px;border-radius:3px;background:var(--bg-3);color:var(--text-2)">${row[5]}</span></td>
+  `;
+  tbody.appendChild(tr);
+});
+
+function filterMaster() {
+  const q = document.getElementById('masterSearch').value.toLowerCase();
+  document.querySelectorAll('#masterTableBody tr').forEach(tr => {
+    tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ─── TABLE SORT ────────────────────────────────
+function sortTable(id, col) {
+  const tbl = document.getElementById(id);
+  const tbody = tbl.querySelector('tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const asc = tbl.dataset.sortCol == col && tbl.dataset.sortDir == 'asc' ? false : true;
+  tbl.dataset.sortCol = col;
+  tbl.dataset.sortDir = asc ? 'asc' : 'desc';
+  rows.sort((a, b) => {
+    const av = a.cells[col]?.textContent.replace(/[^0-9.-]/g,'') || '';
+    const bv = b.cells[col]?.textContent.replace(/[^0-9.-]/g,'') || '';
+    const an = parseFloat(av), bn = parseFloat(bv);
+    if (!isNaN(an) && !isNaN(bn)) return asc ? an - bn : bn - an;
+    return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+  });
+  rows.forEach(r => tbody.appendChild(r));
+}
+</script>
+</body>
+</html>
